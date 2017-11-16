@@ -4,6 +4,7 @@
 #include "Component.h"
 
 namespace B00289996 {
+	struct Collision;
 	class ScriptableComponent : public Component {
 	public:
 		ScriptableComponent();
@@ -13,6 +14,8 @@ namespace B00289996 {
 		virtual void FixedUpdate(const float & fixedDeltaTime) {}
 		virtual void Render() {}
 		virtual void LateUpdate() {}
+		void OnCollisionEnter(const Collision & collision) {}
+		void OnCollisionExit(const Collision & collision) {}
 		//virtual int GetSortOrder() = 0;
 		/*virtual void OnCollisionEnter(const CollisionData & data) {}
 		virtual void OnCollisionStay(const CollisionData & data) {}

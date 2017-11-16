@@ -40,8 +40,6 @@ namespace B00289996 {
 		/// Draws the Debug Renderer.
 		/// </summary>
 		void Draw();
-
-		
 		/// <summary>
 		/// Raycasts returning the closest hit object (if any)
 		/// </summary>

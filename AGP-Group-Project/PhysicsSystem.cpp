@@ -47,7 +47,7 @@ namespace B00289996 {
 						rb->body = nullptr;
 					}
 				}
-				
+
 			}
 		}
 		delete world;
@@ -72,9 +72,9 @@ namespace B00289996 {
 	}
 
 	void PhysicsSystem::AddSphere(const std::shared_ptr<RigidBody> & rb, const glm::vec3 & offset, const float & radius, const float & mass) {
-		
-		if(rb) { // if the object has a RigidBody
-				 // create the sphere
+
+		if (rb) { // if the object has a RigidBody
+				  // create the sphere
 
 			btSphereShape* sphere = new btSphereShape(radius);
 			btTransform t;
@@ -92,19 +92,35 @@ namespace B00289996 {
 
 			shape->addChildShape(t, sphere);
 			btVector3 inertia(0, 0, 0);
-			btScalar masses[2] = { rb->body->getInvMass() != 0.0f ? 1.0f / rb->body->getInvMass() : 0.0f, mass };
-			btScalar m = masses[0] + mass;
-			if (m != 0.0f) shape->calculatePrincipalAxisTransform(masses, t, inertia);// if object has mass calculate inertia
-			rb->body->setMassProps(mass, inertia);
+			noOfChildren = shape->getNumChildShapes();
+			btScalar m = (rb->body->getInvMass() != 0.0f ? 1.0f / rb->body->getInvMass() : 0.0f) + mass;
+
+			if (m != 0.0f) {
+				if (noOfChildren > 0) {
+					std::vector<btScalar> masses;
+					btScalar distributedMass = m / noOfChildren;
+					for (int i = 0; i < noOfChildren; i++) {
+						masses.push_back(distributedMass);
+					}
+					try {
+						shape->calculatePrincipalAxisTransform(masses.data(), t, inertia);// if object has mass calculate inertia
+					}
+					catch (const std::exception& e) {
+						std::cout << e.what() << std::endl;
+					}
+				}
+			}
+			else rb->body->setCollisionFlags(rb->body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT); // else make object kinematic
+			rb->body->setMassProps(m, inertia);
 			rb->body->updateInertiaTensor();
 			rb->body->setActivationState(ACTIVE_TAG);
 			sphere->setUserPointer(rb->GetData());
 		}
-		else std::cout << "Invalid RigidBody:  Cannot Attach Sphere" << std::endl;		
+		else std::cout << "Invalid RigidBody:  Cannot Attach Sphere" << std::endl;
 	}
 
 	void PhysicsSystem::AddBox(const std::shared_ptr<RigidBody> & rb, const glm::vec3 & offset, const glm::vec3 & dimensions, const float & mass) {
-		if(rb) { // if the object has a RigidBody
+		if (rb) { // if the object has a RigidBody
 			btBoxShape* box = new btBoxShape(btVector3(dimensions.x * 0.5f, dimensions.y * 0.5f, dimensions.z * 0.5f));
 			btTransform t;
 			t.setIdentity();
@@ -119,11 +135,27 @@ namespace B00289996 {
 			}
 			shape->addChildShape(t, box);
 			btVector3 inertia(0, 0, 0);
-			btScalar masses[2] = { rb->body->getInvMass() != 0.0f ? 1.0f / rb->body->getInvMass() : 1.0f, mass};
-			btScalar m = masses[0] + mass;
-			if(m > 0.0001f) 
-				shape->calculatePrincipalAxisTransform(masses, t, inertia);// if object has mass calculate inertia
-			else if((rb->body->getCollisionFlags() & btCollisionObject::CF_KINEMATIC_OBJECT) != btCollisionObject::CF_KINEMATIC_OBJECT) rb->body->setCollisionFlags(rb->body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT); // else make object kinematic
+			noOfChildren = shape->getNumChildShapes();
+			btScalar m = (rb->body->getInvMass() != 0.0f ? 1.0f / rb->body->getInvMass() : 0.0f) + mass;
+
+			if (m != 0.0f) {
+				if (noOfChildren > 0) {
+					std::vector<btScalar> masses;
+					btScalar distributedMass = m / noOfChildren;
+					for (int i = 0; i < noOfChildren; i++) {
+						masses.push_back(distributedMass);
+					}
+					try {
+						shape->calculatePrincipalAxisTransform(masses.data(), t, inertia);// if object has mass calculate inertia
+					}
+					catch (const std::exception& e) {
+						std::cout << e.what() << std::endl;
+					}
+				}
+			}
+			else rb->body->setCollisionFlags(rb->body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT); // else make object kinematic
+			rb->body->setMassProps(m, inertia);
+			rb->body->updateInertiaTensor();
 			rb->body->setActivationState(ACTIVE_TAG);
 			box->setUserPointer(rb->GetData());
 		}
@@ -131,7 +163,7 @@ namespace B00289996 {
 	}
 
 	void PhysicsSystem::AddCapsule(const std::shared_ptr<RigidBody>& rb, const glm::vec3 & offset, const float & height, const float & radius, const float & mass) {
-		if(rb) { // if the object has a RigidBody
+		if (rb) { // if the object has a RigidBody
 			btCapsuleShape* capsule = new btCapsuleShape(radius, height);
 			btTransform t;
 			t.setIdentity();
@@ -147,12 +179,28 @@ namespace B00289996 {
 			}
 			shape->addChildShape(t, capsule);
 			btVector3 inertia(0, 0, 0);
-			btScalar masses[2] = {
-				rb->body->getInvMass() != 0.0f ? 1.0f / rb->body->getInvMass() : 0.0f,
-				mass};
-			btScalar m = masses[0] + mass;
-			if(m > 0.0f) shape->calculatePrincipalAxisTransform(masses, t, inertia);// if object has mass calculate inertia
+			noOfChildren = shape->getNumChildShapes();
+			btScalar m = (rb->body->getInvMass() != 0.0f ? 1.0f / rb->body->getInvMass() : 0.0f) + mass;
+
+			if (m != 0.0f) {
+				if (noOfChildren > 0) {
+					std::vector<btScalar> masses;
+					btScalar distributedMass = m / noOfChildren;
+					for (int i = 0; i < noOfChildren; i++) {
+						masses.push_back(distributedMass);
+					}
+					try {
+						shape->calculatePrincipalAxisTransform(masses.data(), t, inertia);// if object has mass calculate inertia
+					}
+					catch (const std::exception& e) {
+						std::cout << e.what() << std::endl;
+					}
+					
+				}
+			}
 			else rb->body->setCollisionFlags(rb->body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT); // else make object kinematic
+			rb->body->setMassProps(m, inertia);
+			rb->body->updateInertiaTensor();
 			rb->body->setActivationState(ACTIVE_TAG);
 			capsule->setUserPointer(rb->GetData());
 		}
@@ -160,8 +208,8 @@ namespace B00289996 {
 	}
 
 	void PhysicsSystem::AddCylinder(const std::shared_ptr<RigidBody>& rb, const glm::vec3 & offset, const glm::vec3 & dimensions, const float & mass) {
-		
-		if(rb) { // if the object has a RigidBody
+
+		if (rb) { // if the object has a RigidBody
 			btCylinderShape* cylinder = new btCylinderShape(btVector3(dimensions.x * 0.5f, dimensions.y * 0.5f, dimensions.z * 0.5f));
 			btTransform t;
 			t.setIdentity();
@@ -177,16 +225,31 @@ namespace B00289996 {
 			}
 			shape->addChildShape(t, cylinder);
 			btVector3 inertia(0, 0, 0);
-			btScalar masses[2] = {
-				rb->body->getInvMass() != 0.0f ? 1.0f / rb->body->getInvMass() : 0.0f,
-				mass};
-			btScalar m = masses[0] + mass;
-			if(m != 0.0f) shape->calculatePrincipalAxisTransform(masses, t, inertia);// if object has mass calculate inertia
-			else rb->body->setCollisionFlags(rb->body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT); // else make object kinematic
+			noOfChildren = shape->getNumChildShapes();
+			btScalar m = (rb->body->getInvMass() != 0.0f ? 1.0f / rb->body->getInvMass() : 0.0f) + mass;
+
+			if (m != 0.0f) {
+				if (noOfChildren > 0) {
+					std::vector<btScalar> masses;
+					btScalar distributedMass = m / noOfChildren;
+					for (int i = 0; i < noOfChildren; i++) {
+						masses.push_back(distributedMass);
+					}
+					try {
+						shape->calculatePrincipalAxisTransform(masses.data(), t, inertia);// if object has mass calculate inertia
+					}
+					catch (const std::exception& e) {
+						std::cout << e.what() << std::endl;
+					}
+				}
+			}
+			else rb->body->setCollisionFlags(rb->body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT); // else make object kinematicematic
+			rb->body->setMassProps(m, inertia);
+			rb->body->updateInertiaTensor();
 			rb->body->setActivationState(ACTIVE_TAG);
 			cylinder->setUserPointer(rb->GetData());
 		}
-		else std::cout << "Invalid RigidBody:  Cannot Attach Cylinder" << std::endl;	
+		else std::cout << "Invalid RigidBody:  Cannot Attach Cylinder" << std::endl;
 	}
 
 	void PhysicsSystem::AddCharacterController(const std::shared_ptr<RigidBody>& rb, const glm::vec3 & offset, const float & height, const float & radius, const float & mass) {
@@ -206,10 +269,10 @@ namespace B00289996 {
 		btCollisionWorld::ClosestRayResultCallback rayCallback(start, end); // use a built in call back function to cast the ray 
 		rayCallback.m_collisionFilterMask = filter; // define what it collides with
 		world->rayTest(start, end, rayCallback);
-		if(rayCallback.hasHit()) { // if the ray intersected an object
+		if (rayCallback.hasHit()) { // if the ray intersected an object
 			GameObjectData* gameObjectData = (GameObjectData*)rayCallback.m_collisionObject->getUserPointer();
-			if(gameObjectData) { // and the object is recognisable as a GameObject
-								 // return the Intersection data
+			if (gameObjectData) { // and the object is recognisable as a GameObject
+								  // return the Intersection data
 				std::weak_ptr<GameObject> g = std::dynamic_pointer_cast<GameObject>(gameObjectData->gameObject.lock());
 				std::shared_ptr<GameObject> gameObject = g.lock();
 				return RayCastHit(true, TypeConverter::ConvertToGLMVector3(rayCallback.m_hitNormalWorld), TypeConverter::ConvertToGLMVector3(rayCallback.m_hitPointWorld), rayCallback.m_closestHitFraction, gameObject);
@@ -224,10 +287,10 @@ namespace B00289996 {
 		btCollisionWorld::AllHitsRayResultCallback rayCallback(start, end); // use a built in call back function to cast the ray 
 		rayCallback.m_collisionFilterMask = filter; // define what it collides with
 		world->rayTest(start, end, rayCallback);
-		for(int i = 0; i < rayCallback.m_hitFractions.size(); i++) {// for each ray intersection
+		for (int i = 0; i < rayCallback.m_hitFractions.size(); i++) {// for each ray intersection
 			GameObjectData* gameObjectData = (GameObjectData*)rayCallback.m_collisionObjects[i]->getUserPointer();
-			if(gameObjectData) { // if the object is recognisable as a GameObject
-								 // add the Intersection data to the array
+			if (gameObjectData) { // if the object is recognisable as a GameObject
+								  // add the Intersection data to the array
 				std::weak_ptr<GameObject> g = std::dynamic_pointer_cast<GameObject>(gameObjectData->gameObject.lock());
 				std::shared_ptr<GameObject> gameObject = g.lock();
 				toReturn.push_back(RayCastHit(true, TypeConverter::ConvertToGLMVector3(rayCallback.m_hitNormalWorld[i]), TypeConverter::ConvertToGLMVector3(rayCallback.m_hitPointWorld[i]), (to - from).length() * rayCallback.m_hitFractions[i], gameObject));
@@ -241,7 +304,7 @@ namespace B00289996 {
 	}
 
 	bool PhysicsSystem::RemoveBody(btRigidBody * body) {
-		if(world && body) {
+		if (world && body) {
 			world->removeRigidBody(body);
 			return true;
 		}
@@ -253,14 +316,14 @@ namespace B00289996 {
 	}
 
 	void PhysicsSystem::SetGravity(const glm::vec3 & grav) {
-		if(world) {
+		if (world) {
 			gravity = grav;
 			world->setGravity(TypeConverter::ConvertToBulletVector3(gravity));
 		}
 	}
 
 	void PhysicsSystem::AttachRigidBody(const std::shared_ptr<RigidBody>& rb, const bool & dynamic) {
-		if(rb->body) {
+		if (rb->body) {
 			std::cout << "Body already attached" << std::endl;
 		}
 		else {
@@ -270,9 +333,9 @@ namespace B00289996 {
 			t.setIdentity();
 			btVector3 inertia(0, 0, 0);
 			shape->addChildShape(t, emptyShape);
-			
+
 			btScalar bMass = dynamic ? 1.0f : 0.0f;
-			
+
 			btRigidBody* body = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(bMass, std::static_pointer_cast<btMotionState>(rb->GetComponent<Transform>().lock()).get(), shape, inertia));
 			world->addRigidBody(body);
 			rb->body = body;
@@ -296,8 +359,8 @@ namespace B00289996 {
 
 	bool PhysicsSystem::BeginContactCallBack(btManifoldPoint & cp, const btCollisionObject * body1, const btCollisionObject * body2) {
 		GameObjectData* gameObjectData1 = (GameObjectData*)body1->getUserPointer(), *gameObjectData2 = (GameObjectData*)body2->getUserPointer();
-		if(gameObjectData1 && gameObjectData2) { // if both objects are recognisable as a GameObjects
-												 // unwrap the GameObjectData
+		if (gameObjectData1 && gameObjectData2) { // if both objects are recognisable as a GameObjects
+												  // unwrap the GameObjectData
 			std::shared_ptr<GameObject> gameObject1 = gameObjectData1->gameObject.lock();
 			std::shared_ptr<GameObject> gameObject2 = gameObjectData2->gameObject.lock();
 			// cache the normal and contact point
@@ -306,19 +369,19 @@ namespace B00289996 {
 			Collision collision;
 			collision.point = contactPoint;
 			// send the collision notifications to the GameObjects
-			if(gameObject1) {
+			if (gameObject1) {
 				collision.normal = normal;
 				collision.distance = cp.m_distance1;
 				collision.gameObject = gameObject2;
 				gameObject1->OnCollisionEnter(collision);
 			}
-			if(gameObject2) {
+			if (gameObject2) {
 				collision.gameObject = gameObject1;
 				collision.distance = cp.getDistance();
 				collision.normal = -normal;
 				gameObject2->OnCollisionEnter(collision);
 			}
-			if(!cp.m_userPersistentData) { // create Cache to be used when the Collision ends
+			if (!cp.m_userPersistentData) { // create Cache to be used when the Collision ends
 				GameObjectsCache *cache = new GameObjectsCache();
 				cache->gameObject1 = gameObject1;
 				cache->gameObject2 = gameObject2;
@@ -329,17 +392,17 @@ namespace B00289996 {
 	}
 
 	bool PhysicsSystem::EndContactCallBack(GameObjectsCache * data) {
-		if(data) { //if Collision cache was generated
-				   // unwrap the GameObjectsCache
+		if (data) { //if Collision cache was generated
+					// unwrap the GameObjectsCache
 			std::shared_ptr<GameObject> gameObject1 = data->gameObject1.lock(), gameObject2 = data->gameObject2.lock();
 			// create a default collision, since the objects are not colliding anymore the only relevant value if gameObject
 			Collision collision;
 			// send the collision end notifications to the GameObjects
-			if(gameObject1) {
+			if (gameObject1) {
 				collision.gameObject = gameObject2;
 				gameObject1->OnCollisionExit(collision);
 			}
-			if(gameObject2) {
+			if (gameObject2) {
 				collision.gameObject = gameObject1;
 				gameObject2->OnCollisionExit(collision);
 			}

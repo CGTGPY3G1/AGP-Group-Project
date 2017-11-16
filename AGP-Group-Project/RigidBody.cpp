@@ -141,7 +141,7 @@ namespace B00289996 {
 	}
 
 	const float RigidBody::GetFriction() {
-		return IsInitialised() ? body->getFriction() : 0.0f;
+		return IsInitialised() ? body->getRollingFriction() : 0.0f;
 	}
 
 	void RigidBody::SetRestitition(const float & restitution) {
@@ -149,7 +149,7 @@ namespace B00289996 {
 	}
 
 	const float RigidBody::GetRestitition() {
-		return IsInitialised() ? body->getRestitution() : 0.0f;;
+		return IsInitialised() ? body->getRestitution() : 0.0f;
 	}
 
 	const float RigidBody::GetMass() {

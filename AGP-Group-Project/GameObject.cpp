@@ -68,9 +68,11 @@ namespace B00289996 {
 	}
 
 	void GameObject::OnCollisionEnter(const Collision & collision) {
+		componentManager.OnCollisionEnter(collision);
 	}
 
 	void GameObject::OnCollisionExit(const Collision & collision) {
+		componentManager.OnCollisionExit(collision);
 	}
 
 	void GameObject::Init(const glm::vec3 & position, const glm::quat & rotation, const glm::vec3 & scale) {

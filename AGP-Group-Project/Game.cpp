@@ -62,7 +62,7 @@ namespace B00289996 {
 		fireMesh->SetMaterial(rockMaterial);
 		std::shared_ptr<RigidBody> rigidbody = campFire->AddComponent<RigidBody>().lock();
 		rigidbody->Init(false);
-		rigidbody->AttachCylinder(glm::vec3(0.0f, 0.15f, 0.0f), glm::vec3(0.2f, 0.3f, 0.2f));
+		rigidbody->AttachCylinder(glm::vec3(0.0f, 0.15f, 0.0f), glm::vec3(0.2f, 0.3f, 0.2f), 0.0f);
 
 		std::shared_ptr<GameObject> particleEmitter1 = GameObjectManager::GetInstance().CreateGameObject("Fire").lock();
 		std::shared_ptr<Transform> fireTransform = particleEmitter1->GetComponent<Transform>().lock();
@@ -193,7 +193,7 @@ namespace B00289996 {
 				meshRenderer->SetMaterial(m);
 				std::shared_ptr<RigidBody> rigidbody = cube->AddComponent<RigidBody>().lock();
 				rigidbody->Init(false);
-				rigidbody->AttachBox(glm::vec3(0.0f), glm::vec3(0.2f));
+				rigidbody->AttachBox(glm::vec3(0.0f), glm::vec3(0.2f), 0.0f);
 			}
 		}
 
@@ -212,7 +212,7 @@ namespace B00289996 {
 		std::shared_ptr<RigidBody> groundRigidBody = ground->AddComponent<RigidBody>().lock();
 		groundRigidBody->Init(false);
 		groundRigidBody->AttachBox(glm::vec3(0.0f), glm::vec3(20.0f, 0.001f, 20.0f), 0.0f);
-
+		
 		//Set-Up Player
 		std::shared_ptr<GameObject> player = GameObjectManager::GetInstance().CreateGameObject("Player").lock();
 		std::shared_ptr<MeshRenderer> playerRenderer = player->AddComponent<MeshRenderer>().lock();
@@ -226,8 +226,8 @@ namespace B00289996 {
 		player->GetComponent<Transform>().lock()->Scale(0.1f);
 		std::shared_ptr<RigidBody> playerBody = player->AddComponent<RigidBody>().lock();
 		playerBody->Init(true, 0.05f, 0.01f);
-		playerBody->AttachSphere(glm::vec3(0.0f), 0.1f, 10.0f);
-
+		playerBody->AttachSphere(glm::vec3(0.0f), 0.1f, 9.0f);
+		playerBody->SetRestitition(0.5f);
 		ToggleDirectionalLight();
 		TogglePointLights();
 
@@ -245,7 +245,9 @@ namespace B00289996 {
 
 	}
 	bool moveFor = true;
+
 	void Game::Update(const float & deltaTime) {
+
 		//Process Frame Time Updates
 		if(Input::GetKeyDown(SDL_SCANCODE_F)) Graphics::GetInstance().ToggleFullscreen();
 		if(Input::GetKeyDown(SDL_SCANCODE_C)) Graphics::GetInstance().ToggleCursor();
@@ -306,10 +308,10 @@ namespace B00289996 {
 		forward.y = right.y = 0.0f;
 		forward = glm::normalize(forward) * 0.1f;
 		right = glm::normalize(right) * 0.1f;
-		if (Input::GetKey(SDL_SCANCODE_W)) playerRB->AddForce(forward, true);
-		if (Input::GetKey(SDL_SCANCODE_A)) playerRB->AddForce(right, true);
-		if (Input::GetKey(SDL_SCANCODE_D)) playerRB->AddForce(-right, true);
-		if (Input::GetKey(SDL_SCANCODE_S)) playerRB->AddForce(-forward, true);
+		if (Input::GetKey(SDL_SCANCODE_W) || Input::GetKey(SDL_SCANCODE_UP)) playerRB->AddForce(forward, true);
+		if (Input::GetKey(SDL_SCANCODE_A) || Input::GetKey(SDL_SCANCODE_LEFT)) playerRB->AddForce(right, true);
+		if (Input::GetKey(SDL_SCANCODE_D) || Input::GetKey(SDL_SCANCODE_RIGHT)) playerRB->AddForce(-right, true);
+		if (Input::GetKey(SDL_SCANCODE_S) || Input::GetKey(SDL_SCANCODE_DOWN)) playerRB->AddForce(-forward, true);
 	}
 
 	void Game::Render() {
@@ -359,6 +361,7 @@ namespace B00289996 {
 		std::shared_ptr<RigidBody> wallRigidBody = wall->AddComponent<RigidBody>().lock();
 		wallRigidBody->Init(false);
 		wallRigidBody->AttachBox(glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(20.0f, 1.0, 0.1f), 0.0f);
+		wallRigidBody->SetRestitition(0.7f);
 		return wall;
 	}
 

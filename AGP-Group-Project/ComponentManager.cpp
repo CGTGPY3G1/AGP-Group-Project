@@ -1,6 +1,7 @@
 #include "ComponentManager.h"
 #include "ComponentHeaders.h"
 #include "GameObject.h"
+#include "Collision.h"
 namespace B00289996 {
 	ComponentManager::ComponentManager() {
 	}
@@ -47,6 +48,18 @@ namespace B00289996 {
 		}
 		for(std::vector<std::shared_ptr<ScriptableComponent>>::iterator i = scriptableComponents.begin(); i != scriptableComponents.end(); ++i) {
 			(*i)->SetEnabled(enabled);
+		}
+	}
+
+	void ComponentManager::OnCollisionEnter(const Collision & collision) {
+		for (std::vector<std::shared_ptr<ScriptableComponent>>::iterator i = scriptableComponents.begin(); i != scriptableComponents.end(); ++i) {
+			(*i)->OnCollisionEnter(collision);
+		}
+	}
+
+	void ComponentManager::OnCollisionExit(const Collision & collision) {
+		for (std::vector<std::shared_ptr<ScriptableComponent>>::iterator i = scriptableComponents.begin(); i != scriptableComponents.end(); ++i) {
+			(*i)->OnCollisionExit(collision);
 		}
 	}
 

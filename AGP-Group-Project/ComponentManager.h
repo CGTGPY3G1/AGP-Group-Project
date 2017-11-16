@@ -7,6 +7,7 @@ namespace B00289996 {
 	class GameObject;
 	class Component;
 	class ScriptableComponent;
+	struct Collision;
 	class ComponentManager {
 	public:
 		ComponentManager();
@@ -25,12 +26,8 @@ namespace B00289996 {
 		void FixedUpdate(const float & fixedDeltaTime);
 		void LateUpdate();
 		void SetEnabled(const bool & enabled);
-		/*void HandleMessage(const Message & message);
-		void OnCollisionEnter(const CollisionData & data) override;
-		void OnCollisionStay(const CollisionData & data) override;
-		void OnCollisionExit(const CollisionData & data) override;
-		void OnSensorEnter(const std::weak_ptr<Collider> & collider) override;
-		void OnSensorExit(const std::weak_ptr<Collider> & collider) override;*/
+		void OnCollisionEnter(const Collision & collision);
+		void OnCollisionExit(const Collision & collision);
 	private:
 		int ownerID = 0;
 		std::vector<std::shared_ptr<Component>> components;
@@ -70,7 +67,7 @@ namespace B00289996 {
 		}
 		return std::weak_ptr<T>();
 	}
-
+	
 	template<typename T>
 	std::weak_ptr<T> ComponentManager::GetComponentInParent() {
 		std::shared_ptr<Transform2D> parent;
@@ -93,12 +90,17 @@ namespace B00289996 {
 	std::vector<std::weak_ptr<T>> ComponentManager::GetComponents() {
 		std::vector<std::weak_ptr<T>> toReturn = std::vector<std::weak_ptr<T>>();
 		ComponentType type = TypeInfo::GetTypeID<T>();
-		for(std::vector<std::shared_ptr<Component>>::iterator i = components.begin(); i != components.end(); ++i) {
-			if(type == (*i)->Type()) toReturn.push_back(std::static_pointer_cast<T>(*i));
+		
+		if (TypeInfo::IsScriptable<T>()) {
+			for (std::vector<std::shared_ptr<ScriptableComponent>>::iterator i = scriptableComponents.begin(); i != scriptableComponents.end(); ++i) {
+				if (type == (*i)->Type()) toReturn.push_back(std::dynamic_pointer_cast<T>(*i));
+			}
 		}
-		/*for(std::vector<std::shared_ptr<ScriptableComponent>>::iterator i = scriptableComponents.begin(); i != scriptableComponents.end(); ++i) {
-			if(type == (*i)->Type()) toReturn.push_back(std::dynamic_pointer_cast<T>(*i));
-		}*/
+		else {
+			for (std::vector<std::shared_ptr<Component>>::iterator i = components.begin(); i != components.end(); ++i) {
+				if (type == (*i)->Type()) toReturn.push_back(std::static_pointer_cast<T>(*i));
+			}
+		}
 		return toReturn;
 	}
 
@@ -122,22 +124,22 @@ namespace B00289996 {
 	template<typename T>
 	inline void ComponentManager::RemoveComponent(const unsigned int & id) {
 		ComponentType type = TypeInfo::GetTypeID<T>();
-		/*if(TypeInfo::IsScriptable<T>()) {
+		if(TypeInfo::IsScriptable<T>()) {
 			for(std::vector<std::shared_ptr<ScriptableComponent>>::iterator i = scriptableComponents.begin(); i != scriptableComponents.end(); ++i) {
 				if(type == (*i)->Type() && id == (*i)->GetCompID()) {
 					scriptableComponents.erase(i);
 					break;
 				};
 			}
-		}*/
-		//else {
+		}
+		else {
 			for(std::vector<std::shared_ptr<Component>>::iterator i = components.begin(); i != components.end(); ++i) {
 				if(type == (*i)->Type() && id == (*i)->GetCompID()) {
 					components.erase(i);
 					break;
 				};
 			}
-		//}
+		}
 		std::shared_ptr<GameObject> g = gameObject.lock();
 		if(g->IterateComponentCount<T>(false) == 0) g->componentMask &= ~TypeInfo::GetTypeID<T>();
 	}

@@ -27,7 +27,7 @@ namespace B00289996 {
 		template <typename T = std::enable_if<std::is_base_of<Component, T>::value>::type> std::vector<std::weak_ptr<T>> GetComponents();
 
 		std::vector<std::shared_ptr<ScriptableComponent>> GetScriptableComponents();
-		//template <typename T = std::enable_if<std::is_base_of<Component, T>::value>::type> bool ComponentExistsInParents();
+		template <typename T = std::enable_if<std::is_base_of<Component, T>::value>::type> bool ComponentExistsInParents();
 		friend bool operator < (const GameObject & a, const GameObject & b);
 		friend bool operator == (const GameObject & a, const GameObject & b);
 		std::string GetName();
