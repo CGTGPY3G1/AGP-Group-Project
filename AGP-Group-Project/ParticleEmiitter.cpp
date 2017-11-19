@@ -21,6 +21,9 @@ namespace B00289996 {
 	}
 
 	ParticleEmitter::~ParticleEmitter() {
+		glDeleteBuffers(1, &IBO);
+		glDeleteBuffers(1, &VBO);
+		glDeleteVertexArrays(1, &VAO);
 	}
 
 	void ParticleEmitter::SetLinearVelocity(const glm::vec3 & newLinearVelocity) {
@@ -46,15 +49,6 @@ namespace B00289996 {
 	const size_t ParticleEmitter::GetNumberOfParticles() const {
 		return particles.size();
 	}
-
-	/*void ParticleEmitter::SetEmitterLifeTime(const float & newLifeTime) {
-		emitterLifeTime = newLifeTime;
-	}
-
-	const float ParticleEmitter::GetEmitterLifeTime() const {
-		return emitterLifeTime;
-	}*/
-
 
 	void ParticleEmitter::SetSize(const float & size) {
 		startSize = size; endSize = size;

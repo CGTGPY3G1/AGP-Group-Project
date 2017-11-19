@@ -20,6 +20,7 @@
 #include "Time.h"
 #include "PhysicsSystem.h"
 #include "DebugDraw.h"
+#include <glm\gtc\matrix_inverse.hpp>
 namespace B00289996 {
 	RenderingSystem::RenderingSystem() : wave(false), bloom(false), swirl(false), swirlTimer(0.0f), waveTimer(0.0f), collisionType(0) {
 		depthBuffer = std::make_shared<DepthBuffer>();
@@ -186,21 +187,24 @@ namespace B00289996 {
 	void RenderingSystem::RenderScene() {
 		ResizeBuffers();
 		Graphics::GetInstance().Clear();
-		float near = 1.0f, far = 100.0f, halfWidth = 20.0f, halfHeight = 20.0f;
-		glm::mat4 lightProjection = glm::ortho(-halfWidth * 2, halfWidth, -halfHeight, halfHeight, near, far);
+		float near = 1.0f, far = 100.0f, halfWidth = 8.0f, halfHeight = 6.0f;
+		glm::mat4 lightProjection = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, near, far);
 		glm::mat4 lightView = glm::lookAt(directionLight->position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		glm::mat4 shadowMatrix = lightProjection * lightView;
 		depthShader->Bind();
 		depthShader->SetUniform("lightSpace", shadowMatrix);
-		glDisable(GL_CULL_FACE);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glDisable(GL_BLEND);
 		glEnable(GL_POLYGON_OFFSET_FILL);
+		
 		glPolygonOffset(-2.0f, 2.0f);
 		GLsizei shadowWidth = (depthBuffer->GetWidth() + 0.01f), shadowHeight = GLsizei(depthBuffer->GetHeight() + 0.01f);
 		glViewport(0, 0, shadowWidth, shadowHeight);
 		depthBuffer->Bind();
 		Graphics::GetInstance().Clear();
-		glDisable(GL_BLEND);
+		
 		if (directionLightObject) {
 			for (std::vector<std::shared_ptr<GameObject>>::iterator i = allRenderables.begin(); i != allRenderables.end(); ++i) {
 				std::shared_ptr<GameObject> gameObject = (*i);
@@ -222,7 +226,7 @@ namespace B00289996 {
 		
 		depthBuffer->Unbind();
 		depthShader->UnBind();
-
+		glDisable(GL_POLYGON_OFFSET_FILL);
 		std::shared_ptr<Texture> depthTexture = depthBuffer->GetTexture();
 
 		std::vector<std::shared_ptr<Texture>> cubeMapTextures = std::vector<std::shared_ptr<Texture>>();
@@ -230,18 +234,19 @@ namespace B00289996 {
 
 			float aspect = 1.0f;
 			near = 0.0f;
-			far = 20.0f;
+			// directions for orienting shadow transform matrices
 			const glm::vec3 up = glm::vec3(0.0, 1.0, 0.0), down = glm::vec3(0.0, -1.0, 0.0), left = glm::vec3(-1.0, 0.0, 0.0),
 				right = glm::vec3(1.0, 0.0, 0.0), forward = glm::vec3(0.0, 0.0, 1.0), back = glm::vec3(0.0, 0.0, -1.0);
-			glm::mat4 shadowProjection = glm::perspective(glm::radians(90.0f), aspect, near, far);
-
 
 			cubicDepthShader->Bind();
 
 			std::shared_ptr<Camera> cam = cameraObject->GetComponent<Camera>().lock();
-			glm::mat4 camTransform = cameraObject->GetComponent<Camera>().lock()->GetViewProjection();
+			
 			for(size_t i = 0; i < pointLights.size(); i++) {
-				cubicDepthBuffers[i]->Bind();
+				far = pointLights[i]->lightLength; // set the far value of the perspective to the lights length
+				glm::mat4 shadowProjection = glm::perspective(glm::radians(90.0f), aspect, near, far);
+				cubicDepthBuffers[i]->Bind(); // bind the relevant buffer
+				// resize the viewport to the buffers size
 				shadowWidth = (cubicDepthBuffers[i]->GetWidth() + 0.01f), shadowHeight = GLsizei(cubicDepthBuffers[i]->GetHeight() + 0.01f);
 				glViewport(0, 0, shadowWidth, shadowHeight);
 				Graphics::GetInstance().Clear();
@@ -280,9 +285,8 @@ namespace B00289996 {
 			}
 			cubicDepthShader->UnBind();
 		}
-		glEnable(GL_CULL_FACE);
+		
 		glEnable(GL_BLEND);
-		glDisable(GL_POLYGON_OFFSET_FILL);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		shader->Bind();
@@ -309,7 +313,7 @@ namespace B00289996 {
 			}
 			return false;
 		});
-
+		glm::mat4 view = cameraObject->GetComponent<Camera>().lock()->GetView();
 		for(std::vector<std::shared_ptr<GameObject>>::iterator i = renderables.begin(); i != renderables.end(); ++i) {
 			std::shared_ptr<GameObject> gameObject = (*i);
 			std::shared_ptr<MeshRenderer> meshRenderer = gameObject->GetComponent<MeshRenderer>().lock();

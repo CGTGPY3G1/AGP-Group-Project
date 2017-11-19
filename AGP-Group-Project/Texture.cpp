@@ -1,7 +1,9 @@
 #include "Texture.h"
 
 namespace B00289996 {
-
+	Texture::~Texture() {
+		glDeleteTextures(1, &id);
+	}
 	void Texture::Bind(std::shared_ptr<ShaderProgram> shader) {
 		if(type == TextureType::DIFFUSE) {
 			static GLuint boundTexture = 0;

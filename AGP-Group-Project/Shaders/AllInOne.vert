@@ -7,7 +7,7 @@ layout (location = 3) in vec3 biTangent;
 layout (location = 4) in vec2 textureCoordinate;
 layout (location = 5) in vec4 colour;
 
-const int MAX_POINT_LIGHTS = 11;
+const int MAX_POINT_LIGHTS = 5;
 
 uniform int numberOfSpotLights;
 uniform int numberOfPointLights;

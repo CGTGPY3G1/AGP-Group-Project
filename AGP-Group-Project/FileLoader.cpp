@@ -92,15 +92,16 @@ namespace B00289996 {
 			GLuint id;
 			glActiveTexture(GL_TEXTURE0 + (unsigned int)type);
 			glGenTextures(1, &id);
-			glBindTexture(GL_TEXTURE_2D, id);
-			int width, height;
-			unsigned char * imageData = SOIL_load_image(filePath.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
-			if(imageData == nullptr) {
-				std::cout << "Error loading image from " << filePath << std::endl;
-			}
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
-			SOIL_free_image_data(imageData);
-			if(id != GL_FALSE) {
+			if (id != GL_FALSE) {
+				glBindTexture(GL_TEXTURE_2D, id);
+				int width, height;
+				unsigned char * imageData = SOIL_load_image(filePath.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
+				if (imageData == nullptr) {
+					std::cout << "Error loading image from " << filePath << std::endl;
+					return std::shared_ptr<Texture>();
+				}
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+				SOIL_free_image_data(imageData);
 
 				glGenerateMipmap(GL_TEXTURE_2D);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -116,6 +117,8 @@ namespace B00289996 {
 				textures[filePath] = t;
 				return t;
 			}
+			std::cout << "Error loading image from " << filePath << std::endl;
+			return std::shared_ptr<Texture>();
 		}
 		return std::shared_ptr<Texture>();
 	}

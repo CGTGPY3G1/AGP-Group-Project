@@ -36,7 +36,10 @@ namespace B00289996 {
 		return instance;
 	}
 
-	DebugDraw::~DebugDraw() {
+	DebugDraw::~DebugDraw() {	
+		glDeleteBuffers(1, &colourBuffer);
+		glDeleteBuffers(1, &positionBuffer);
+		glDeleteVertexArrays(1, &VAO);
 	}
 
 	void DebugDraw::drawLine(const btVector3 & from, const btVector3 & to, const btVector3 & color) {

@@ -17,6 +17,7 @@ namespace B00289996 {
 	struct Texture : std::enable_shared_from_this<Texture> {
 		TextureType type;
 		GLuint id;
+		~Texture();
 		unsigned int width = 1, height = 1;
 		void Bind(std::shared_ptr<ShaderProgram> shader);
 		void UnBind();

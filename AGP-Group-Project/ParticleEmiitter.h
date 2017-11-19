@@ -72,8 +72,6 @@ namespace B00289996 {
 		void SetEmissionRate(const float & rate);
 		const float GetEmissionRate() const;
 		const size_t GetNumberOfParticles() const;
-		/*void SetEmitterLifeTime(const float & newLifeTime);
-		const float GetEmitterLifeTime() const;*/
 		void SetSize(const float & size);
 		void SetSize(const float & start, const float & end);
 		const float GetStartSize() const;

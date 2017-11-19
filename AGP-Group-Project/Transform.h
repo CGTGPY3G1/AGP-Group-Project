@@ -41,8 +41,6 @@ namespace B00289996 {
 		const glm::vec3 GetRight();
 		const glm::vec3 TransformToWorldPoint(const glm::vec3 & point);
 		const glm::vec3 TransformToLocalPoint(const glm::vec3 & point);
-		const glm::vec3 TransformToWorldDirection(const glm::vec3 & direction);
-		const glm::vec3 TransformToLocalDirection(const glm::vec3 & direction);
 		void SetParent(const std::weak_ptr<Transform> & newParent);
 		const std::weak_ptr<Transform> GetParent() const;
 		void SlerpRotation(const glm::quat & slerpTo, const float & alpha);
@@ -71,7 +69,7 @@ namespace B00289996 {
 		glm::vec3 localPosition = glm::vec3(0.0f), worldPosition, localScale = glm::vec3(1.0f), worldScale = glm::vec3(1.0f), forward, up, right;
 		glm::quat localRotation, worldRotation;
 		glm::mat4 worldTransform, localTransform, world2Local;
-		glm::mat3 inverseNormalMatrix, normalmatrix;
+		glm::mat3 normalmatrix;
 		bool dirty = true;
 		unsigned int id;
 		std::weak_ptr<Transform> parent;

@@ -185,18 +185,15 @@
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="gl_error.hpp" />
     <ClInclude Include="Graphics.h" />
-    <ClInclude Include="HDRBuffer.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightFlicker.h" />
-    <ClInclude Include="LightingSystem.h" />
     <ClInclude Include="Lights.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Message.h" />
-    <ClInclude Include="Octree.h" />
     <ClInclude Include="OpenGLUtility.h" />
     <ClInclude Include="ParticleEmiitter.h" />
     <ClInclude Include="PhysicsSystem.h" />
@@ -232,12 +229,10 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="Graphics.cpp" />
-    <ClCompile Include="HDRBuffer.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightFlicker.cpp" />
-    <ClCompile Include="LightingSystem.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -257,6 +252,31 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Shaders\AllInOne.frag" />
+    <None Include="Shaders\AllInOne.vert" />
+    <None Include="Shaders\basic.frag" />
+    <None Include="Shaders\basic.vert" />
+    <None Include="Shaders\Blend.frag" />
+    <None Include="Shaders\Blend.vert" />
+    <None Include="Shaders\BrightnessLimit.frag" />
+    <None Include="Shaders\BrightnessLimit.vert" />
+    <None Include="Shaders\DepthBuffer.frag" />
+    <None Include="Shaders\DepthBuffer.vert" />
+    <None Include="Shaders\GaussianBlur.frag" />
+    <None Include="Shaders\GaussianBlur.vert" />
+    <None Include="Shaders\Particles.frag" />
+    <None Include="Shaders\Particles.vert" />
+    <None Include="Shaders\phong.frag" />
+    <None Include="Shaders\phong.vert" />
+    <None Include="Shaders\PointDepthBuffer.frag" />
+    <None Include="Shaders\PointDepthBuffer.geom" />
+    <None Include="Shaders\PointDepthBuffer.vert" />
+    <None Include="Shaders\StaticWave.frag" />
+    <None Include="Shaders\StaticWave.vert" />
+    <None Include="Shaders\Swirl.frag" />
+    <None Include="Shaders\Swirl.vert" />
+    <None Include="Shaders\textured.frag" />
+    <None Include="Shaders\textured.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -38,7 +38,7 @@ namespace B00289996 {
 		void SwapFrameBuffers(std::shared_ptr<FrameBuffer> & l, std::shared_ptr<FrameBuffer> & r);
 		int GetFrustumCollisionType();
 		void SetFrustumCollisionType(const int & type);
-		//static bool SortByOpacity();
+
 	private:
 		std::shared_ptr<ShaderProgram> shader, depthShader, cubicDepthShader, brightShader, gaussianBlur, staticWave, blendShader, swirlShader;
 		std::vector<std::shared_ptr<PointLight>> pointLights;
@@ -53,7 +53,7 @@ namespace B00289996 {
 		std::vector<std::shared_ptr<CubicDepthBuffer>> cubicDepthBuffers;
 		std::shared_ptr<FrameBuffer> frameBuffer;
 		std::shared_ptr<FrameBuffer> tempBuffers[2];
-		const static int MAX_LIGHTS = 11;
+		const static int MAX_LIGHTS = 5;
 		bool wave, bloom, swirl, blur;
 		float waveTimer, swirlTimer;
 		int collisionType;

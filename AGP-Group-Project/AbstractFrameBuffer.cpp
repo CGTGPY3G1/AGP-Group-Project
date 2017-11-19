@@ -5,6 +5,7 @@ namespace B00289996 {
 	}
 
 	AbstractFrameBuffer::~AbstractFrameBuffer() {
+		glDeleteFramebuffers(1, &FBO);
 	}
 
 	const void AbstractFrameBuffer::Bind() const {

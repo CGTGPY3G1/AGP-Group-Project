@@ -7,7 +7,7 @@ struct DirectionLight {
 	float intensity;
 };
 
-const int MAX_POINT_LIGHTS = 11;
+const int MAX_POINT_LIGHTS = 5;
 
 uniform struct PointLight { 
     vec3 ambient;
@@ -98,11 +98,11 @@ float CalculateDirectionalShadow(vec3 norm) {
 		float closestDepth = texture(textureUnit2, projCoords.xy).r; 
 		float currentDepth = projCoords.z;  
 		float bias = max(0.0005 * (1.0 - dot(norm, inValues.directionLightDirection)), 0.00005); 
-		vec2 texelSize = 1.0 / textureSize(textureUnit2, 0);
+		vec2 strength = 0.5 / textureSize(textureUnit2, 0);
 		int count = 0;
 		for(int x = -2; x <= 2; ++x) {
 			for(int y = -2; y <= 2; ++y) {
-				float pcfDepth = texture(textureUnit2, projCoords.xy + vec2(x, y) * texelSize).r; 
+				float pcfDepth = texture(textureUnit2, projCoords.xy + vec2(x, y) * strength).r; 
 				shadow += (currentDepth - bias > pcfDepth) ? 1.0 : 0.0;   
 				count++;     
 			}    

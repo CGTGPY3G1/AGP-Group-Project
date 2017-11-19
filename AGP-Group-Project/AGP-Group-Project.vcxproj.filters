@@ -81,9 +81,6 @@
     <ClInclude Include="Graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HDRBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="HUD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -94,9 +91,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LightFlicker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LightingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Lights.h">
@@ -112,9 +106,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Message.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Octree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OpenGLUtility.h">
@@ -218,9 +209,6 @@
     <ClCompile Include="Graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HDRBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="HUD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -231,9 +219,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LightFlicker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LightingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
@@ -287,5 +272,80 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Shaders\AllInOne.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\AllInOne.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\basic.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\basic.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\Blend.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\Blend.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\BrightnessLimit.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\BrightnessLimit.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\DepthBuffer.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\DepthBuffer.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\GaussianBlur.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\GaussianBlur.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\Particles.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\Particles.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\phong.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\phong.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\PointDepthBuffer.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\PointDepthBuffer.geom">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\PointDepthBuffer.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\StaticWave.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\StaticWave.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\Swirl.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\Swirl.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\textured.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\textured.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@ namespace B00289996 {
 	struct Texture;
 	class DepthBuffer : public AbstractFrameBuffer {
 	public:
-		DepthBuffer(const unsigned int & width = 8192, const unsigned int & height = 8192);
+		DepthBuffer(const unsigned int & width = 3076, const unsigned int & height = 3076);
 		~DepthBuffer();
 		const std::shared_ptr<Texture> GetTexture() const;
 	protected:

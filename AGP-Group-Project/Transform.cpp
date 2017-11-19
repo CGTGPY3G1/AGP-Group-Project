@@ -162,14 +162,6 @@ namespace B00289996 {
 		return glm::vec3(world2Local * glm::vec4(point, 0.0f));
 	}
 
-	const glm::vec3 Transform::TransformToWorldDirection(const glm::vec3 & direction) {
-		return glm::normalize(GetNormalMatrix() * direction);
-	}
-
-	const glm::vec3 Transform::TransformToLocalDirection(const glm::vec3 & direction) {
-		return glm::normalize(inverseNormalMatrix * direction);
-	}
-
 	void Transform::SetParent(const std::weak_ptr<Transform> & newParent) {
 		if(parent.use_count() > 0) parent.lock()->RemoveChild(std::static_pointer_cast<Transform>(shared_from_this()));
 		parent = newParent;
@@ -327,8 +319,7 @@ namespace B00289996 {
 				worldRotation = glm::normalize(localRotation);
 				worldScale = localScale;
 			}		
-			normalmatrix = glm::inverseTranspose(glm::mat3_cast(worldRotation));
-			inverseNormalMatrix = glm::inverseTranspose(world2Local);
+			normalmatrix = glm::mat3_cast(worldRotation);
 			world2Local = glm::inverse(worldTransform);
 			worldPosition = worldTransform[3];
 			forward = glm::normalize(normalmatrix * glm::vec3(0.0f, 0.0f, 1.0f)), up = glm::normalize(normalmatrix * glm::vec3(0.0f, 1.0f, 0.0f)), right = glm::normalize(normalmatrix * glm::vec3(1.0f, 0.0f, 0.0f));
