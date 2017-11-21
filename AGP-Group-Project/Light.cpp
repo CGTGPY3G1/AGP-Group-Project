@@ -24,10 +24,6 @@ namespace B00289996 {
 				lightType = newType;
 				light = std::make_shared<PointLight>();
 				break;
-			case SPOT_LIGHT:
-				lightType = newType;
-				light = std::make_shared<SpotLight>();
-				break;
 			default:
 				break;
 			}

@@ -33,12 +33,6 @@ namespace B00289996 {
 			if(lightType == POINT_LIGHT) return std::static_pointer_cast<PointLight> (light);
 			return std::shared_ptr<PointLight>();
 		}
-
-		template <>
-		std::shared_ptr<SpotLight> Light::GetLight<SpotLight>() {
-			if(lightType == SPOT_LIGHT) return std::static_pointer_cast<SpotLight> (light);
-			return std::shared_ptr<SpotLight>();
-		}
 	private:
 		std::shared_ptr<BaseLight> light;
 		LightType lightType;

@@ -22,12 +22,6 @@ namespace B00289996 {
 		float lightLength;
 	};
 
-	struct SpotLight : PointLight {
-		glm::vec3 direction;
-		float cutOff;
-		float outerCutOff;
-		float intensity;
-	};
 }
 
 #endif //!B00289996_LIGHTS_H

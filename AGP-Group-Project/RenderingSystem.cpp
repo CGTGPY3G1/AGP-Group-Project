@@ -290,10 +290,10 @@ namespace B00289996 {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		shader->Bind();
-		for(int i = 0; i < MAX_LIGHTS; i++) {
-			shader->SetUniform<int>(("cubeMaps[" + std::to_string(i) + "]").c_str(), (4 + i));
-			glActiveTexture(GL_TEXTURE4 + i);
-			if(i < pointLights.size()) glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextures[i]->id);
+		for (int i = 0; i < MAX_LIGHTS; i++) {
+			shader->SetUniform<int>(("cubeMap" + std::to_string(i)).c_str(), (3 + i));
+			glActiveTexture(GL_TEXTURE3 + i);
+			if (i < pointLights.size()) glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextures[i]->id);
 			else glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		}
 

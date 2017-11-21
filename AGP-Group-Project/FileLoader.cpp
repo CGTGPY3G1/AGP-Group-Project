@@ -208,7 +208,7 @@ namespace B00289996 {
 		s->Bind();
 		glGetProgramiv(s->id, GL_LINK_STATUS, &status);
 		if(status == GL_FALSE) {
-			PrintShaderError(s->id);
+			PrintShaderProgramError(s->id);
 			return std::shared_ptr<ShaderProgram>();
 		}
 		shaders[vert + frag + geom] = s;

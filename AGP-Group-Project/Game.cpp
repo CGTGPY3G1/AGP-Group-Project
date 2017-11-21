@@ -163,7 +163,7 @@ namespace B00289996 {
 					l2->ambient = glm::vec3(0.0f, 0.0f, 1.0f);
 					l2->specular = glm::vec3(0.2f, 0.2f, 0.2f);
 				}
-				l2->attenuation = 0.8f;
+				l2->attenuation = 1.0f;
 				l2->lightLength = 4.0f;
 			}
 		}
