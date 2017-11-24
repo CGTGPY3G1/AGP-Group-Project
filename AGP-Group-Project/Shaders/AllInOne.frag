@@ -25,6 +25,7 @@ struct Material {
 };
 
 uniform bool pointLightsEnabled;
+uniform bool castShadows;
 uniform bool directionalLightEnabled;
 uniform DirectionLight directionLight;
 
@@ -88,12 +89,13 @@ float CalculatePointShadow(int activeLight) {
 vec3 CalculatePointLighting(int activeLight, vec3 norm, float dist) {
     vec3 lightDirection = normalize(inValues.pointLightPositions[activeLight] - inValues.position);
 	float spec = pow(max(dot(norm, normalize(lightDirection + inValues.viewDirection)), 0.0), material.shininess);
-	float attenuation = clamp(1.0 - dist * dist / (pointLights[activeLight].lightLength * pointLights[activeLight].lightLength), 0.0, 1.0) * pointLights[activeLight].attenuation;  
-    vec3 ambient = pointLights[activeLight].ambient * attenuation * material.ambient.xyz;
+	float attenuation = (1.0 - (dist / pointLights[activeLight].lightLength)) * pointLights[activeLight].attenuation;  
+    vec3 ambient = pointLights[activeLight].ambient * material.ambient.xyz;
 	float diff = max(dot(norm, lightDirection), 0.0);
-    vec3 diffuse = pointLights[activeLight].diffuse * attenuation * diff * material.diffuse.xyz;
-    vec3 specular = pointLights[activeLight].specular * spec * attenuation * material.specular.xyz;
-	return ambient + ((diffuse + specular) * (1.0 - CalculatePointShadow(activeLight)));
+    vec3 diffuse = pointLights[activeLight].diffuse * diff * material.diffuse.xyz;
+    vec3 specular = pointLights[activeLight].specular * spec * material.specular.xyz;
+	float shadow = castShadows ? CalculatePointShadow(activeLight) : 0.0;
+	return ambient + ((diffuse + specular) * attenuation * (1.0 - shadow));
 }
 
 float CalculateDirectionalShadow(vec3 norm) {
@@ -114,7 +116,7 @@ float CalculateDirectionalShadow(vec3 norm) {
 		}
 		shadow /= count;
 	}
-    return shadow;
+    return clamp(shadow, 0.0, 1.0);
 }
 
 vec3 CalculateDirectionLighting(vec3 norm, float shadow) {	
@@ -122,9 +124,9 @@ vec3 CalculateDirectionLighting(vec3 norm, float shadow) {
 	float diff = max(dot(norm, lightDirection), 0.0);
 	float spec = pow(max(dot(inValues.viewDirection, reflect(-lightDirection, norm)), 0.0), material.shininess);
 	vec3 ambient = directionLight.ambient * material.ambient.xyz;
-	vec3 diffuse = directionLight.ambient * diff * material.diffuse.xyz;
-	vec3 specular = directionLight.ambient * spec * material.specular.xyz;      
-	return ambient + (diffuse + specular) * directionLight.intensity * (1.0-shadow);
+	vec3 diffuse = directionLight.diffuse * diff * material.diffuse.xyz;
+	vec3 specular = directionLight.specular * spec * material.specular.xyz;      
+	return ambient + (diffuse + specular) * (1.0-shadow) * directionLight.intensity;
 }
 
 void main()
@@ -134,12 +136,12 @@ void main()
 	vec3 result = vec3(0.0);
 	
 	for(int i = 0; i < numberOfPointLights; i++) {
-		float dist = length(inValues.pointLightPositions[i] - inValues.position);
+		float dist = distance(inValues.pointLightPositions[i], inValues.position);
 		if(dist > pointLights[i].lightLength) continue;
 		result += CalculatePointLighting(i, norm, dist);
 	}
 	if(directionalLightEnabled){
-		float directionalShadow = CalculateDirectionalShadow(norm);
+		float directionalShadow = castShadows ? CalculateDirectionalShadow(norm) : 0.0f;
 		result += CalculateDirectionLighting(norm, directionalShadow);
 	}
 	colour = vec4(result, material.diffuse.w) * tex; 

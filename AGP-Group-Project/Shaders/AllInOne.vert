@@ -43,7 +43,9 @@ void main(void) {
 		mat3 tangentSpaceMatrix = mat3(t, bt, n);
 		outValues.normal = tangentSpaceMatrix * normalize(texture(textureUnit1, textureCoordinate).rgb * 2.0 - 1.0);
 	}
-	outValues.normal = n;
+	else {
+		outValues.normal = n;
+	}
 	outValues.position = vec3(modelview * vec4(position, 1.0));
 	outValues.viewPosition = viewPosition;
 	outValues.viewDirection = normalize(outValues.viewPosition - outValues.position);

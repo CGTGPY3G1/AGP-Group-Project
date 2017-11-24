@@ -22,7 +22,7 @@
 #include "DebugDraw.h"
 #include <glm\gtc\matrix_inverse.hpp>
 namespace B00289996 {
-	RenderingSystem::RenderingSystem() : wave(false), bloom(false), swirl(false), swirlTimer(0.0f), waveTimer(0.0f), collisionType(0) {
+	RenderingSystem::RenderingSystem() : wave(false), bloom(false), swirl(false), shadow(false), swirlTimer(0.0f), waveTimer(0.0f), collisionType(0) {
 		depthBuffer = std::make_shared<DepthBuffer>();
 		depthShader = FileLoader::GetInstance().LoadShader("Shaders//DepthBuffer.vert", "Shaders//DepthBuffer.frag");
 		for(size_t i = 0; i < MAX_LIGHTS; i++) {
@@ -135,6 +135,7 @@ namespace B00289996 {
 	}
 
 	void RenderingSystem::UpdateLightingUniforms() {
+		shader->SetUniform<bool>("castShadows", shadow);
 		if(directionLight) {
 			shader->SetUniform<glm::vec3>("directionLightDirection", directionLight->direction);
 			shader->SetUniform<glm::vec3>("directionLight.ambient", directionLight->ambient);
@@ -149,7 +150,7 @@ namespace B00289996 {
 			shader->SetUniform<glm::vec3>(("pointLightPositions[" + std::to_string(i) + "]").c_str(), pointLights[i]->position);
 			shader->SetUniform<glm::vec3>(("pointLights[" + std::to_string(i) + "].ambient").c_str(), pointLights[i]->ambient);
 			shader->SetUniform<glm::vec3>(("pointLights[" + std::to_string(i) + "].diffuse").c_str(), pointLights[i]->diffuse);
-			shader->SetUniform<glm::vec3>(("pointLights[" + std::to_string(i) + "].specular").c_str(), pointLights[i]->specular);
+			shader->SetUniform<glm::vec3>(("pointLights[" + std::to_string(i) + "].specular").c_str(), pointLights[i]->specular);	
 			shader->SetUniform<float>(("pointLights[" + std::to_string(i) + "].attenuation").c_str(), pointLights[i]->attenuation);
 			shader->SetUniform<float>(("pointLights[" + std::to_string(i) + "].lightLength").c_str(), pointLights[i]->lightLength);
 		}
@@ -187,118 +188,124 @@ namespace B00289996 {
 	void RenderingSystem::RenderScene() {
 		ResizeBuffers();
 		Graphics::GetInstance().Clear();
-		float near = 1.0f, far = 100.0f, halfWidth = 8.0f, halfHeight = 6.0f;
-		glm::mat4 lightProjection = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, near, far);
-		glm::mat4 lightView = glm::lookAt(directionLight->position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		std::vector<std::shared_ptr<Texture>> cubeMapTextures;
+		std::shared_ptr<Texture> depthTexture;
+		if (shadow) {
+			float near = 1.0f, far = 100.0f, halfWidth = 8.0f, halfHeight = 6.0f;
+			glm::mat4 lightProjection = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, near, far);
+			glm::mat4 lightView = glm::lookAt(directionLight->position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-		glm::mat4 shadowMatrix = lightProjection * lightView;
-		depthShader->Bind();
-		depthShader->SetUniform("lightSpace", shadowMatrix);
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		glDisable(GL_BLEND);
-		glEnable(GL_POLYGON_OFFSET_FILL);
-		
-		glPolygonOffset(-2.0f, 2.0f);
-		GLsizei shadowWidth = (depthBuffer->GetWidth() + 0.01f), shadowHeight = GLsizei(depthBuffer->GetHeight() + 0.01f);
-		glViewport(0, 0, shadowWidth, shadowHeight);
-		depthBuffer->Bind();
-		Graphics::GetInstance().Clear();
-		
-		if (directionLightObject) {
-			for (std::vector<std::shared_ptr<GameObject>>::iterator i = allRenderables.begin(); i != allRenderables.end(); ++i) {
-				std::shared_ptr<GameObject> gameObject = (*i);
+			glm::mat4 shadowMatrix = lightProjection * lightView;
+			depthShader->Bind();
+			depthShader->SetUniform("lightSpace", shadowMatrix);
+			glDisable(GL_CULL_FACE);
 
-				std::shared_ptr<MeshRenderer> meshRenderer = gameObject->GetComponent<MeshRenderer>().lock();
-				std::vector<std::shared_ptr<Mesh>> meshes = meshRenderer->GetMeshes();
-				std::shared_ptr<Transform> transform = gameObject->GetComponent<Transform>().lock();
-				depthShader->SetUniform("modelview", transform->GetWorldTransform());
-				for (std::vector<std::shared_ptr<Mesh>>::iterator i = meshes.begin(); i != meshes.end(); ++i) {
-					GLuint VAO = (*i)->GetVAO();
-					if (VAO) {
-						glBindVertexArray(VAO);
-						glDrawElements(GL_TRIANGLES, (*i)->GetIndexCount(), GL_UNSIGNED_INT, 0);
-						glBindVertexArray(0);
-					}
-				}
-			}
-		}
-		
-		depthBuffer->Unbind();
-		depthShader->UnBind();
-		glDisable(GL_POLYGON_OFFSET_FILL);
-		std::shared_ptr<Texture> depthTexture = depthBuffer->GetTexture();
+			glDisable(GL_BLEND);
 
-		std::vector<std::shared_ptr<Texture>> cubeMapTextures = std::vector<std::shared_ptr<Texture>>();
-		if(pointLights.size() > 0) {
+			GLsizei shadowWidth = (depthBuffer->GetWidth() + 0.01f), shadowHeight = GLsizei(depthBuffer->GetHeight() + 0.01f);
+			glViewport(0, 0, shadowWidth, shadowHeight);
+			depthBuffer->Bind();
+			Graphics::GetInstance().Clear();
 
-			float aspect = 1.0f;
-			near = 0.0f;
-			// directions for orienting shadow transform matrices
-			const glm::vec3 up = glm::vec3(0.0, 1.0, 0.0), down = glm::vec3(0.0, -1.0, 0.0), left = glm::vec3(-1.0, 0.0, 0.0),
-				right = glm::vec3(1.0, 0.0, 0.0), forward = glm::vec3(0.0, 0.0, 1.0), back = glm::vec3(0.0, 0.0, -1.0);
-
-			cubicDepthShader->Bind();
-
-			std::shared_ptr<Camera> cam = cameraObject->GetComponent<Camera>().lock();
-			
-			for(size_t i = 0; i < pointLights.size(); i++) {
-				far = pointLights[i]->lightLength; // set the far value of the perspective to the lights length
-				glm::mat4 shadowProjection = glm::perspective(glm::radians(90.0f), aspect, near, far);
-				cubicDepthBuffers[i]->Bind(); // bind the relevant buffer
-				// resize the viewport to the buffers size
-				shadowWidth = (cubicDepthBuffers[i]->GetWidth() + 0.01f), shadowHeight = GLsizei(cubicDepthBuffers[i]->GetHeight() + 0.01f);
-				glViewport(0, 0, shadowWidth, shadowHeight);
-				Graphics::GetInstance().Clear();
-				std::vector<glm::mat4> shadowTransforms;
-				glm::vec3 position = pointLights[i]->position;
-				shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + right, down));
-				shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + left, down));
-				shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + up, forward));
-				shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + down, back));
-				shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + forward, down));
-				shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + back, down));
-
-
-				cubicDepthShader->SetUniform("far", far);
-				for(int j = 0; j < shadowTransforms.size(); j++) {
-					cubicDepthShader->SetUniform(("lightMatrices[" + std::to_string(j) + "]").c_str(), shadowTransforms[j]);
-				}
-				cubicDepthShader->SetUniform("lightPosition", position);
-				for(std::vector<std::shared_ptr<GameObject>>::iterator i = allRenderables.begin(); i != allRenderables.end(); ++i) {
+			if (directionLightObject) {
+				for (std::vector<std::shared_ptr<GameObject>>::iterator i = allRenderables.begin(); i != allRenderables.end(); ++i) {
 					std::shared_ptr<GameObject> gameObject = (*i);
+
 					std::shared_ptr<MeshRenderer> meshRenderer = gameObject->GetComponent<MeshRenderer>().lock();
 					std::vector<std::shared_ptr<Mesh>> meshes = meshRenderer->GetMeshes();
 					std::shared_ptr<Transform> transform = gameObject->GetComponent<Transform>().lock();
-					cubicDepthShader->SetUniform("modelview", transform->GetWorldTransform());
-					for(std::vector<std::shared_ptr<Mesh>>::iterator i = meshes.begin(); i != meshes.end(); ++i) {
+					depthShader->SetUniform("modelview", transform->GetWorldTransform());
+					for (std::vector<std::shared_ptr<Mesh>>::iterator i = meshes.begin(); i != meshes.end(); ++i) {
 						GLuint VAO = (*i)->GetVAO();
-						if(VAO) {
+						if (VAO) {
 							glBindVertexArray(VAO);
 							glDrawElements(GL_TRIANGLES, (*i)->GetIndexCount(), GL_UNSIGNED_INT, 0);
 							glBindVertexArray(0);
 						}
 					}
 				}
-				cubeMapTextures.push_back(cubicDepthBuffers[i]->GetTexture());
-				cubicDepthBuffers[i]->Unbind();
 			}
-			cubicDepthShader->UnBind();
-		}
-		
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		shader->Bind();
+			depthBuffer->Unbind();
+			depthShader->UnBind();
+
+
+			depthTexture = depthBuffer->GetTexture();
+
+			cubeMapTextures = std::vector<std::shared_ptr<Texture>>();
+			if (pointLights.size() > 0) {
+
+				float aspect = 1.0f;
+				near = 0.0f;
+				// directions for orienting shadow transform matrices
+				const glm::vec3 up = glm::vec3(0.0, 1.0, 0.0), down = glm::vec3(0.0, -1.0, 0.0), left = glm::vec3(-1.0, 0.0, 0.0),
+					right = glm::vec3(1.0, 0.0, 0.0), forward = glm::vec3(0.0, 0.0, 1.0), back = glm::vec3(0.0, 0.0, -1.0);
+
+				cubicDepthShader->Bind();
+
+				std::shared_ptr<Camera> cam = cameraObject->GetComponent<Camera>().lock();
+
+				for (size_t i = 0; i < pointLights.size(); i++) {
+					far = pointLights[i]->lightLength; // set the far value of the perspective to the lights length
+					glm::mat4 shadowProjection = glm::perspective(glm::radians(90.0f), aspect, near, far);
+					cubicDepthBuffers[i]->Bind(); // bind the relevant buffer
+					// resize the viewport to the buffers size
+					shadowWidth = (cubicDepthBuffers[i]->GetWidth() + 0.01f), shadowHeight = GLsizei(cubicDepthBuffers[i]->GetHeight() + 0.01f);
+					glViewport(0, 0, shadowWidth, shadowHeight);
+					Graphics::GetInstance().Clear();
+					std::vector<glm::mat4> shadowTransforms;
+					glm::vec3 position = pointLights[i]->position;
+					shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + right, down));
+					shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + left, down));
+					shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + up, forward));
+					shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + down, back));
+					shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + forward, down));
+					shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + back, down));
+
+
+					cubicDepthShader->SetUniform("far", far);
+					for (int j = 0; j < shadowTransforms.size(); j++) {
+						cubicDepthShader->SetUniform(("lightMatrices[" + std::to_string(j) + "]").c_str(), shadowTransforms[j]);
+					}
+					cubicDepthShader->SetUniform("lightPosition", position);
+					for (std::vector<std::shared_ptr<GameObject>>::iterator i = allRenderables.begin(); i != allRenderables.end(); ++i) {
+						std::shared_ptr<GameObject> gameObject = (*i);
+						std::shared_ptr<MeshRenderer> meshRenderer = gameObject->GetComponent<MeshRenderer>().lock();
+						std::vector<std::shared_ptr<Mesh>> meshes = meshRenderer->GetMeshes();
+						std::shared_ptr<Transform> transform = gameObject->GetComponent<Transform>().lock();
+						cubicDepthShader->SetUniform("modelview", transform->GetWorldTransform());
+						for (std::vector<std::shared_ptr<Mesh>>::iterator i = meshes.begin(); i != meshes.end(); ++i) {
+							GLuint VAO = (*i)->GetVAO();
+							if (VAO) {
+								glBindVertexArray(VAO);
+								glDrawElements(GL_TRIANGLES, (*i)->GetIndexCount(), GL_UNSIGNED_INT, 0);
+								glBindVertexArray(0);
+							}
+						}
+					}
+					cubeMapTextures.push_back(cubicDepthBuffers[i]->GetTexture());
+					cubicDepthBuffers[i]->Unbind();
+				}
+				cubicDepthShader->UnBind();
+			}
+			shader->Bind();
+			shader->SetUniform("lightSpace", shadowMatrix);
+			shader->SetUniform("far", far);			
+		}
+		else {
+			shader->Bind();
+		}
 		for (int i = 0; i < MAX_LIGHTS; i++) {
 			shader->SetUniform<int>(("cubeMap" + std::to_string(i)).c_str(), (3 + i));
 			glActiveTexture(GL_TEXTURE3 + i);
-			if (i < pointLights.size()) glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextures[i]->id);
+			if (shadow && i < pointLights.size()) glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextures[i]->id);
 			else glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		}
-
-		shader->SetUniform("lightSpace", shadowMatrix);
-		shader->SetUniform("far", far);
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glCullFace(GL_BACK);
+		
 		UpdateLightingUniforms();
 		UpdateCameraUniforms();
 		frameBuffer->Bind();
@@ -323,7 +330,7 @@ namespace B00289996 {
 			shader->SetUniform("modelview", transform->GetWorldTransform());
 			shader->SetUniform("normalMatrix", transform->GetNormalMatrix());
 			std::shared_ptr<Material> material = meshRenderer->GetMaterial();
-			material->ReplaceTexture(TextureType::DEPTH_MAP, depthTexture);
+			if(shadow) material->ReplaceTexture(TextureType::DEPTH_MAP, depthTexture);
 			material->Bind();
 			const bool TRANSPARENT = material->GetDiffuse().w < 0.9999f;
 			if(TRANSPARENT) glDepthMask(GL_FALSE);
@@ -442,11 +449,17 @@ namespace B00289996 {
 		l = r; r = temp;
 	}
 
-	int RenderingSystem::GetFrustumCollisionType() {
+	bool RenderingSystem::GetFrustumCollisionType() {
 		return collisionType;
 	}
-	void RenderingSystem::SetFrustumCollisionType(const int & type) {
+	void RenderingSystem::SetFrustumCollisionType(const bool & type) {
 		collisionType = type;
+	}
+	const bool RenderingSystem::GetCastShadow() const {
+		return shadow;
+	}
+	void RenderingSystem::SetCastShadow(const bool & castShadow) {
+		shadow = castShadow;
 	}
 }
 

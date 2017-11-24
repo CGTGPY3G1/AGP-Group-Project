@@ -33,9 +33,9 @@ namespace B00289996 {
 		std::shared_ptr<Light> dl = directionLight->AddComponent<Light>().lock();
 		std::shared_ptr<DirectionLight> l = dl->GetLight<DirectionLight>();
 		l->diffuse = glm::vec3(1.0f, 0.95f, 0.84f);
-		l->ambient = glm::vec3(1.0f, 0.95f, 0.84f);
+		l->ambient = glm::vec3(0.4f, 0.380f, 0.336f);
 		l->specular = glm::vec3(0.2f, 0.2f, 0.2f);
-		l->intensity = 0.8f;
+		l->intensity = 1.0f;
 
 		std::shared_ptr<Transform> directionLightTransform = directionLight->GetComponent<Transform>().lock();
 		if (directionLightTransform) {
@@ -113,7 +113,7 @@ namespace B00289996 {
 		fl->SetLightType(LightType::POINT_LIGHT);
 		std::shared_ptr<PointLight> fl1 = fl->GetLight<PointLight>();
 		fl1->diffuse = glm::vec3(1.0f, 0.7f, 0.45f);
-		fl1->ambient = glm::vec3(1.0f, 0.7f, 0.45f);
+		fl1->ambient = glm::vec3(0.03f, 0.02f, 0.01f);
 		fl1->specular = glm::vec3(0.7f, 0.3f, 0.1f);
 		fl1->attenuation = 0.8f;
 		fl1->lightLength = 4.0f;
@@ -150,17 +150,17 @@ namespace B00289996 {
 				const unsigned int val = (i + j) % 3;
 				if (val == 0) {
 					l2->diffuse = glm::vec3(1.0f, 0.0f, 0.0f);
-					l2->ambient = glm::vec3(1.0f, 0.0f, 0.0f);
+					l2->ambient = glm::vec3(0.01f, 0.0f, 0.0f);
 					l2->specular = glm::vec3(0.2f, 0.2f, 0.2f);
 				}
 				else if (val == 1) {
 					l2->diffuse = glm::vec3(0.0f, 1.0f, 0.0f);
-					l2->ambient = glm::vec3(0.0f, 1.0f, 0.0f);
+					l2->ambient = glm::vec3(0.0f, 0.01f, 0.0f);
 					l2->specular = glm::vec3(0.2f, 0.2f, 0.2f);
 				}
 				else {
 					l2->diffuse = glm::vec3(0.0f, 0.0f, 1.0f);
-					l2->ambient = glm::vec3(0.0f, 0.0f, 1.0f);
+					l2->ambient = glm::vec3(0.0f, 0.0f, 0.01f);
 					l2->specular = glm::vec3(0.2f, 0.2f, 0.2f);
 				}
 				l2->attenuation = 1.0f;
@@ -241,15 +241,17 @@ namespace B00289996 {
 		
 		if(Input::GetKeyDown(SDL_SCANCODE_1)) ToggleDirectionalLight(); //Toggle Directional Lighting On/Off
 		if(Input::GetKeyDown(SDL_SCANCODE_2)) TogglePointLights(); //Toggle Point Lighting On/Off
+		if(Input::GetKeyDown(SDL_SCANCODE_3)) renderingSystem->SetCastShadow(!renderingSystem->GetCastShadow()); //Toggle Shadows On/Off
+		
 		//Toggle Particle System On/Off
-		if(Input::GetKeyDown(SDL_SCANCODE_3)) {
+		if(Input::GetKeyDown(SDL_SCANCODE_4)) {
 			std::shared_ptr<GameObject> campFire = GameObjectManager::GetInstance().GetGameObject("Campfire").lock();
 			campFire->SetEnabled(!campFire->GetEnabled());
 		}
 		// Toggle Post Processing Effects
-		if(Input::GetKeyDown(SDL_SCANCODE_4)) renderingSystem->SetBloom(!renderingSystem->GetBloom());
-		if(Input::GetKeyDown(SDL_SCANCODE_5)) renderingSystem->SetWave(!renderingSystem->GetWave());
-		if(Input::GetKeyDown(SDL_SCANCODE_6)) renderingSystem->SetSwirl(!renderingSystem->GetSwirl());
+		if(Input::GetKeyDown(SDL_SCANCODE_5)) renderingSystem->SetBloom(!renderingSystem->GetBloom());
+		if(Input::GetKeyDown(SDL_SCANCODE_6)) renderingSystem->SetWave(!renderingSystem->GetWave());
+		if(Input::GetKeyDown(SDL_SCANCODE_7)) renderingSystem->SetSwirl(!renderingSystem->GetSwirl());
 		// Toggle Debug Draw
 		if (Input::GetKeyDown(SDL_SCANCODE_I)) PhysicsSystem::GetInstance().SetDrawDebug(!PhysicsSystem::GetInstance().GetDrawDebug());
 

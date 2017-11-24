@@ -8,12 +8,12 @@ namespace B00289996 {
 		glDeleteFramebuffers(1, &FBO);
 	}
 
-	const void AbstractFrameBuffer::Bind() const {
+	void AbstractFrameBuffer::Bind() const {
 		glViewport(0, 0, w, h);
 		glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 	}
 
-	const void AbstractFrameBuffer::Unbind() const {
+	void AbstractFrameBuffer::Unbind() const {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
