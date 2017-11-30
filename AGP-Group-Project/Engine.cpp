@@ -13,7 +13,7 @@
 
 /*#include "DebugDraw.h"
 #include "AssetManager.h"*/
-namespace B00289996 {
+namespace B00289996B00227422 {
 	Engine::Engine() {
 		Graphics::GetInstance().Init();
 		running = true;

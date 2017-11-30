@@ -1,10 +1,10 @@
 #pragma once
-#ifndef B00289996_SHADER_PROGRAM_H
-#define B00289996_SHADER_PROGRAM_H
+#ifndef B00289996B00227422_SHADER_PROGRAM_H
+#define B00289996B00227422_SHADER_PROGRAM_H
 #include <GL\glew.h>
 #include <vector>
 #include <memory>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	struct ShaderValue {
 		std::string name;
 		GLenum type;
@@ -35,4 +35,4 @@ namespace B00289996 {
 	};
 }
 
-#endif // !B00289996_SHADER_PROGRAM_H
+#endif // !B00289996B00227422_SHADER_PROGRAM_H

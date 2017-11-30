@@ -1,10 +1,10 @@
 #pragma once
-#ifndef B00289996_LIGHTS_H
-#define B00289996_LIGHTS_H
+#ifndef B00289996B00227422_LIGHTS_H
+#define B00289996B00227422_LIGHTS_H
 #include <glm\vec3.hpp>
 #include <glm\vec4.hpp>
 #include <GL\glew.h>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	struct BaseLight {
 		glm::vec3 position;
 		glm::vec3 diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -24,4 +24,4 @@ namespace B00289996 {
 
 }
 
-#endif //!B00289996_LIGHTS_H
+#endif //!B00289996B00227422_LIGHTS_H

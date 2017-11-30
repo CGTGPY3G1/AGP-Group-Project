@@ -7,7 +7,7 @@
 #include <glm\gtx\string_cast.hpp>
 #include <glm\gtx\rotate_vector.hpp>
 #include "Bounds.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	const glm::mat4 Transform::IDENTITY = glm::mat4(1.0f);
 
 	Transform::Transform(const std::weak_ptr<GameObject> & g, const glm::vec3 & position, const glm::quat & rotation, const glm::vec3 & scale) : Component(g), btMotionState(), dirty(true) {

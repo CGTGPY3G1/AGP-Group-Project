@@ -11,7 +11,7 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	HUD::HUD() :currentTextIndex(0), currentTextureIndex(0) {
 		// ensure TTF is only initialised once, (irrelevant due to use of the singleton pattern)
 		static bool ttfInitialized = false;

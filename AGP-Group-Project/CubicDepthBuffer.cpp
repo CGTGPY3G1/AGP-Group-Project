@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Texture.h"
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	CubicDepthBuffer::CubicDepthBuffer(const unsigned int & width, const unsigned int & height) : AbstractFrameBuffer(width, height) {
 		Generate();
 	}

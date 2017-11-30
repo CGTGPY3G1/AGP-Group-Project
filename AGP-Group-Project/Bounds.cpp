@@ -1,5 +1,5 @@
 #include "Bounds.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 
 	AABB::AABB(const glm::vec3 & minimum, const glm::vec3 & maximum) : min(minimum), max(maximum) {
 	}

@@ -1,7 +1,7 @@
 #include "Collider.h"
 #include "GameObject.h"
 #include "RigidBody.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	Collider::Collider() : Component() {
 	}
 

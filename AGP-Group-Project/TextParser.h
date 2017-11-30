@@ -1,6 +1,6 @@
 #pragma once
-#ifndef B00289996_TEXT_PARSER_H
-#define B00289996_TEXT_PARSER_H
+#ifndef B00289996B00227422_TEXT_PARSER_H
+#define B00289996B00227422_TEXT_PARSER_H
 #include <string>
 class TextParser {
 public:
@@ -8,4 +8,4 @@ public:
 	static std::string ReadFile(const std::string & location);
 };
 
-#endif // !B00289996_TEXT_PARSER_H
+#endif // !B00289996B00227422_TEXT_PARSER_H

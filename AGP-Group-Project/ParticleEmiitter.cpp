@@ -10,7 +10,7 @@
 #include "Camera.h"
 #include "Transform.h"
 #include "GameObject.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	
 	ParticleEmitter::ParticleEmitter() {
 	}

@@ -1,6 +1,6 @@
 #include "Input.h"
 #include "SDL.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 
 	bool Input::pressed[SDL_Scancode::SDL_NUM_SCANCODES] = {false};
 	bool Input::changed[SDL_Scancode::SDL_NUM_SCANCODES] = {false};

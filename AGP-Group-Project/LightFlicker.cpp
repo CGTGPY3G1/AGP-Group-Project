@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include <glm\gtc\random.hpp>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	LightFlicker::LightFlicker() : ScriptableComponent() {
 	}
 

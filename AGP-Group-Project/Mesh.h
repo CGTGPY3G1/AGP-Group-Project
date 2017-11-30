@@ -1,6 +1,6 @@
 #pragma once
-#ifndef B00289996_MESH_H
-#define B00289996_MESH_H
+#ifndef B00289996B00227422_MESH_H
+#define B00289996B00227422_MESH_H
 #include "OpenGLUtility.h"
 #include "Bounds.h"
 #include <string>
@@ -11,7 +11,7 @@
 #include <GL\glew.h>
 #include <memory>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class ShaderProgram;
 	
 	struct Vertex {
@@ -58,4 +58,4 @@ namespace B00289996 {
 		bool dirty;
 	};
 }
-#endif //!B00289996_MESH_H
+#endif //!B00289996B00227422_MESH_H

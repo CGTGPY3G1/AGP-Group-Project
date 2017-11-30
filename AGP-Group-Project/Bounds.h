@@ -1,8 +1,8 @@
-#ifndef B00289996_BOUNDS_H
-#define B00289996_BOUNDS_H
+#ifndef B00289996B00227422_BOUNDS_H
+#define B00289996B00227422_BOUNDS_H
 #include <glm\vec3.hpp>
 #include <glm\gtc\quaternion.hpp>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	struct AABB {
 		AABB(const glm::vec3 & minimum = glm::vec3(0.0f), const glm::vec3 & maximum = glm::vec3(0.0f));
 		glm::vec3 min, max;
@@ -23,4 +23,4 @@ namespace B00289996 {
 		float radius;
 	};
 }
-#endif // !B00289996_BOUNDS_H
+#endif // !B00289996B00227422_BOUNDS_H

@@ -21,7 +21,7 @@
 #include "PhysicsSystem.h"
 #include "DebugDraw.h"
 #include <glm\gtc\matrix_inverse.hpp>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	RenderingSystem::RenderingSystem() : wave(false), bloom(false), swirl(false), shadow(false), swirlTimer(0.0f), waveTimer(0.0f), collisionType(0) {
 		depthBuffer = std::make_shared<DepthBuffer>();
 		depthShader = FileLoader::GetInstance().LoadShader("Shaders//DepthBuffer.vert", "Shaders//DepthBuffer.frag");
@@ -136,6 +136,7 @@ namespace B00289996 {
 
 	void RenderingSystem::UpdateLightingUniforms() {
 		shader->SetUniform<bool>("castShadows", shadow);
+		shader->SetUniform<bool>("allowNormalMapping", normalMapping);
 		if(directionLight) {
 			shader->SetUniform<glm::vec3>("directionLightDirection", directionLight->direction);
 			shader->SetUniform<glm::vec3>("directionLight.ambient", directionLight->ambient);
@@ -147,7 +148,7 @@ namespace B00289996 {
 		const unsigned int noOfPointLights = pointLights.size();
 		shader->SetUniform<int>("numberOfPointLights", noOfPointLights);
 		for(unsigned int i = 0; i < noOfPointLights; i++) {
-			shader->SetUniform<glm::vec3>(("pointLightPositions[" + std::to_string(i) + "]").c_str(), pointLights[i]->position);
+			shader->SetUniform<glm::vec3>(("pointLights[" + std::to_string(i) + "].position").c_str(), pointLights[i]->position);
 			shader->SetUniform<glm::vec3>(("pointLights[" + std::to_string(i) + "].ambient").c_str(), pointLights[i]->ambient);
 			shader->SetUniform<glm::vec3>(("pointLights[" + std::to_string(i) + "].diffuse").c_str(), pointLights[i]->diffuse);
 			shader->SetUniform<glm::vec3>(("pointLights[" + std::to_string(i) + "].specular").c_str(), pointLights[i]->specular);	
@@ -443,6 +444,13 @@ namespace B00289996 {
 	void RenderingSystem::SetSwirl(const bool & swirl) {
 		if(swirl) swirlTimer = 0.0f;
 		this->swirl = swirl;
+	}
+	const bool RenderingSystem::GetNormalMapping() const {
+		return normalMapping;
+	}
+
+	void RenderingSystem::SetNormalMapping(const bool & normalMapping) {
+		this->normalMapping = normalMapping;
 	}
 	void RenderingSystem::SwapFrameBuffers(std::shared_ptr<FrameBuffer>& l, std::shared_ptr<FrameBuffer>& r) {
 		std::shared_ptr <FrameBuffer> temp = l;

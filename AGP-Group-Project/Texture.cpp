@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	Texture::~Texture() {
 		glDeleteTextures(1, &id);
 	}

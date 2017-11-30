@@ -1,9 +1,9 @@
 #pragma once
-#ifndef B00289996_COMPONENT_MANAGER_H
-#define B00289996_COMPONENT_MANAGER_H
+#ifndef B00289996B00227422_COMPONENT_MANAGER_H
+#define B00289996B00227422_COMPONENT_MANAGER_H
 #include <memory>
 #include <vector>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class GameObject;
 	class Component;
 	class ScriptableComponent;
@@ -145,4 +145,4 @@ namespace B00289996 {
 	}
 }
 
-#endif // !B00289996_COMPONENT_MANAGER_H
+#endif // !B00289996B00227422_COMPONENT_MANAGER_H

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef B00289996_TYPE_CONVERTER_H
-#define B00289996_TYPE_CONVERTER_H
+#ifndef B00289996B00227422_TYPE_CONVERTER_H
+#define B00289996B00227422_TYPE_CONVERTER_H
 #include <memory>
 #include <glm\mat4x4.hpp>
 #include <glm\vec3.hpp>
@@ -9,7 +9,7 @@
 #include <btBulletCollisionCommon.h>
 #include <assimp\types.h>
 #include "Transform.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	/// <summary>
 	/// Converts Between Bullet Physics and GLMathematics types
 	/// </summary>
@@ -76,4 +76,4 @@ namespace B00289996 {
 	};
 }
 
-#endif // !B00289996_TYPE_CONVERTER_H
+#endif // !B00289996B00227422_TYPE_CONVERTER_H

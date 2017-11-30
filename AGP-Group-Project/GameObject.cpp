@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "GameObjectManager.h"
 #include "Collision.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	GameObject::GameObject(const std::string & goName) : name(goName) {
 	}
 

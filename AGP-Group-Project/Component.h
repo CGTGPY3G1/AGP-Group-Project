@@ -1,11 +1,11 @@
 #pragma once
-#ifndef B00289996_COMPONENT_H
-#define B00289996_COMPONENT_H
+#ifndef B00289996B00227422_COMPONENT_H
+#define B00289996B00227422_COMPONENT_H
 
 #include <memory>
 #include <vector>
 #include <string>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	enum ComponentType : unsigned int {
 		COMPONENT_NULL = 0,
 		COMPONENT_TRANSFORM = 1 << 0,
@@ -119,6 +119,6 @@ namespace B00289996 {
 		return gameObject.lock()->ComponentExistsInParents<T>();
 	}
 }
-#endif // !B00289996_COMPONENT_H
+#endif // !B00289996B00227422_COMPONENT_H
 
 

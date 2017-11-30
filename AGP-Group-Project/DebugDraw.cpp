@@ -5,7 +5,7 @@
 #include <GL\glew.h>
 #include <glm\gtc\matrix_inverse.hpp>
 #include <iostream>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	unsigned int DebugDraw::VAO = 0, DebugDraw::positionBuffer = 0, DebugDraw::colourBuffer = 0;
 
 	DebugDraw::DebugDraw() {

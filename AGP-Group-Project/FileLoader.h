@@ -1,12 +1,12 @@
 #pragma once
-#ifndef B00289996_MODEL_LOADER_H
-#define B00289996_MODEL_LOADER_H
+#ifndef B00289996B00227422_MODEL_LOADER_H
+#define B00289996B00227422_MODEL_LOADER_H
 #include <unordered_map>
 #include <vector>
 #include "Texture.h"
 
 struct aiScene;
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class ShaderProgram;
 	class Mesh;
 	
@@ -26,4 +26,4 @@ namespace B00289996 {
 	};
 }
 
-#endif // !B00289996_MODEL_LOADER_H
+#endif // !B00289996B00227422_MODEL_LOADER_H

@@ -1,11 +1,11 @@
 #pragma once
-#ifndef B00289996_GRAPHICS_H
-#define B00289996_GRAPHICS_H
+#ifndef B00289996B00227422_GRAPHICS_H
+#define B00289996B00227422_GRAPHICS_H
 #include <GL/glew.h>
 #include <SDL.h>
 #include <string>
 #include <glm\vec2.hpp>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class Graphics {
 		friend class Engine;
 	public:
@@ -31,4 +31,4 @@ namespace B00289996 {
 		glm::vec2 scale;
 	};
 }
-#endif // !B00289996_GRAPHICS_H
+#endif // !B00289996B00227422_GRAPHICS_H

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef B00289996_PARTICLES_H
-#define B00289996_PARTICLES_H
+#ifndef B00289996B00227422_PARTICLES_H
+#define B00289996B00227422_PARTICLES_H
 
 #include "ScriptableComponent.h"
 #include <glm/glm.hpp>
@@ -17,7 +17,7 @@
 #include <GL\glew.h>
 #include <memory>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class ShaderProgram;
 	struct Texture;
 	struct ParticleVert {
@@ -111,4 +111,4 @@ namespace B00289996 {
 
 	
 }
-#endif // !B00289996_PARTICLES_H
+#endif // !B00289996B00227422_PARTICLES_H

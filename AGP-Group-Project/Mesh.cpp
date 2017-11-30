@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include <glm\geometric.hpp>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 
 	Mesh::Mesh() {
 	}

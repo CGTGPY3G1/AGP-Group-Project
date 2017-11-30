@@ -1,6 +1,6 @@
 #include "GameObjectManager.h"
 #include "GameObject.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 
 	GameObjectManager & GameObjectManager::GetInstance() {
 		static GameObjectManager instance;

@@ -1,12 +1,12 @@
 #pragma once
-#ifndef B00289996_INPUT_H
-#define B00289996_INPUT_H
+#ifndef B00289996B00227422_INPUT_H
+#define B00289996B00227422_INPUT_H
 #include <SDL_scancode.h>
 
 #include <SDL_mouse.h>
 #include <glm\vec2.hpp>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class Input {
 		friend class Engine;
 	public:
@@ -69,4 +69,4 @@ namespace B00289996 {
 	};
 }
 
-#endif // !B00289996_INPUT_H
+#endif // !B00289996B00227422_INPUT_H

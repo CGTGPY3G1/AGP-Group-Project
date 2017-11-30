@@ -1,7 +1,7 @@
 #include "ScriptManagementSystem.h"
 #include "GameObject.h"
 #include "ScriptableComponent.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	/*bool SortScripts(const std::shared_ptr<ScriptableComponent> & l, const std::shared_ptr<ScriptableComponent> & r) {
 		return l->GetSortOrder() < r->GetSortOrder();
 	}*/

@@ -4,7 +4,7 @@
 #include "Transform.h"
 #include "Shader.h"
 #include "Mesh.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	MeshRenderer::MeshRenderer(const std::weak_ptr<GameObject>& g) : Component(g) {
 	}
 

@@ -1,10 +1,10 @@
 #pragma once
-#ifndef B00289996_MATERIAL_H
-#define B00289996_MATERIAL_H
+#ifndef B00289996B00227422_MATERIAL_H
+#define B00289996B00227422_MATERIAL_H
 #include "Texture.h"
 #include "Mesh.h"
 #include <memory>
-namespace B00289996 {
+namespace B00289996B00227422 {
 
 	struct OpenGLMaterial {
 		
@@ -44,4 +44,4 @@ namespace B00289996 {
 	};
 }
 
-#endif // !B00289996_MATERIAL_H
+#endif // !B00289996B00227422_MATERIAL_H

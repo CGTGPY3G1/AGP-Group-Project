@@ -1,10 +1,10 @@
 #pragma once
-#ifndef B00289996_RENDERING_SYSTEM_H
-#define B00289996_RENDERING_SYSTEM_H
+#ifndef B00289996B00227422_RENDERING_SYSTEM_H
+#define B00289996B00227422_RENDERING_SYSTEM_H
 
 #include "System.h"
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	struct SpotLight;
 	struct Texture;
 	struct DirectionLight;
@@ -67,6 +67,13 @@ namespace B00289996 {
 		/// <summary> Sets the boolean value used to toggle the swirl effect. </summary>
 		/// <param name="blur">true if swirl effect is to be used, else false.</param>
 		void SetSwirl(const bool & swirl);
+		/// <summary> Gets the boolean value used to toggle the normal mapping effect. </summary>
+		/// <returns>true if normal mapping effect is in use, else false.</returns>
+		const bool GetNormalMapping() const;
+		/// <summary> Sets
+		/// the boolean value used to toggle the normal mapping effect. </summary>
+		/// <param name="blur">true if normal mapping effect is to be used, else false.</param>
+		void SetNormalMapping(const bool & normalMapping);
 		/// <summary> Swaps 2 frame buffers using a temporary variable as storage. </summary>
 		/// <param name="l">The first buffer.</param>
 		/// <param name="r">The second buffer.</param>
@@ -100,8 +107,8 @@ namespace B00289996 {
 		std::shared_ptr<FrameBuffer> frameBuffer;
 		std::shared_ptr<FrameBuffer> tempBuffers[2];
 		const static int MAX_LIGHTS = 5;
-		bool wave, bloom, swirl, blur, shadow, collisionType;
+		bool wave, bloom, swirl, blur, shadow, collisionType, normalMapping;
 		float waveTimer, swirlTimer;
 	};
 }
-#endif // !B00289996_RENDERING_SYSTEM_H
+#endif // !B00289996B00227422_RENDERING_SYSTEM_H

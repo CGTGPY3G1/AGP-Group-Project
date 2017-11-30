@@ -1,6 +1,6 @@
 #include "Light.h"
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	Light::Light(const std::weak_ptr<GameObject>& g) : Component(g) {
 		light = std::make_shared<DirectionLight>();
 		lightType = DIRECTION_LIGHT;

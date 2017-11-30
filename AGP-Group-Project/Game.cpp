@@ -13,7 +13,7 @@
 #include "Lights.h"
 #include "HUD.h"
 #include "PhysicsSystem.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	Game::Game() : lastVelocity(glm::vec3(0.0f, 0.0f, 1.0f)){
 		// Load Main Shader + Rendering/Script Management Systems
 		scriptManagementSystem = std::make_shared<ScriptManagementSystem>();
@@ -252,6 +252,8 @@ namespace B00289996 {
 		if(Input::GetKeyDown(SDL_SCANCODE_5)) renderingSystem->SetBloom(!renderingSystem->GetBloom());
 		if(Input::GetKeyDown(SDL_SCANCODE_6)) renderingSystem->SetWave(!renderingSystem->GetWave());
 		if(Input::GetKeyDown(SDL_SCANCODE_7)) renderingSystem->SetSwirl(!renderingSystem->GetSwirl());
+		// Toggle Post Normal Mapping Effects
+		if (Input::GetKeyDown(SDL_SCANCODE_8)) renderingSystem->SetNormalMapping(!renderingSystem->GetNormalMapping());
 		// Toggle Debug Draw
 		if (Input::GetKeyDown(SDL_SCANCODE_I)) PhysicsSystem::GetInstance().SetDrawDebug(!PhysicsSystem::GetInstance().GetDrawDebug());
 

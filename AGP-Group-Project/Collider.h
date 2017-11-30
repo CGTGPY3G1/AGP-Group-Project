@@ -1,10 +1,10 @@
 #pragma once
-#ifndef B00289996_COLLIDER_H
-#define B00289996_COLLIDER_H
+#ifndef B00289996B00227422_COLLIDER_H
+#define B00289996B00227422_COLLIDER_H
 #include "Component.h"
 #include <btBulletCollisionCommon.h>
 #include <glm\vec3.hpp>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	struct PhysicsMaterial {
 		float friction = 1.0f, restitution = 1.0f;
 	};
@@ -25,4 +25,4 @@ namespace B00289996 {
 		bool isSensor;
 	};
 }
-#endif // !B00289996_COLLIDER_H
+#endif // !B00289996B00227422_COLLIDER_H

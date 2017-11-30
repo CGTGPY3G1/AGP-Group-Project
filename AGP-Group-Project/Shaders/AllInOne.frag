@@ -10,6 +10,7 @@ struct DirectionLight {
 const int MAX_POINT_LIGHTS = 5;
 
 uniform struct PointLight { 
+	vec3 position;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -24,6 +25,8 @@ struct Material {
 	float shininess;
 };
 
+uniform bool useNormalMap;
+uniform bool allowNormalMapping;
 uniform bool pointLightsEnabled;
 uniform bool castShadows;
 uniform bool directionalLightEnabled;
@@ -33,7 +36,7 @@ uniform int numberOfSpotLights;
 uniform int numberOfPointLights;
 uniform Material material;
 uniform sampler2D textureUnit0;
-
+uniform sampler2D textureUnit1;
 uniform sampler2D textureUnit2;
 uniform samplerCube cubeMap0;
 uniform samplerCube cubeMap1;
@@ -42,7 +45,6 @@ uniform samplerCube cubeMap3;
 uniform samplerCube cubeMap4;
 
 uniform float far;
-uniform vec3 pointLightPositions[MAX_POINT_LIGHTS]; 
 
 in ShaderValues {
 	vec3 position;
@@ -50,8 +52,8 @@ in ShaderValues {
 	vec2 textureCoordinate;
 	vec3 viewPosition;
 	vec3 viewDirection;
+	mat3 tangentSpaceMatrix;
 	vec3 directionLightDirection;
-	vec3 pointLightPositions[MAX_POINT_LIGHTS];
 	vec4 lightSpacePosition;
 } inValues;
 
@@ -67,7 +69,7 @@ vec3 sampleOffsetDirections[samples] = vec3[] (
 out vec4 colour;
 
 float CalculatePointShadow(int activeLight) {
-    vec3 toLight = (inValues.position - pointLightPositions[activeLight]);
+    vec3 toLight = (inValues.position - pointLights[activeLight].position);
     float currentDepth = length(toLight);
 	float shadow = 0.0;
 	float bias = 0.015;
@@ -87,7 +89,7 @@ float CalculatePointShadow(int activeLight) {
 }
 
 vec3 CalculatePointLighting(int activeLight, vec3 norm, float dist) {
-    vec3 lightDirection = normalize(inValues.pointLightPositions[activeLight] - inValues.position);
+    vec3 lightDirection = normalize(pointLights[activeLight].position - inValues.position);
 	float spec = pow(max(dot(norm, normalize(lightDirection + inValues.viewDirection)), 0.0), material.shininess);
 	float attenuation = (1.0 - (dist / pointLights[activeLight].lightLength)) * pointLights[activeLight].attenuation;  
     vec3 ambient = pointLights[activeLight].ambient * material.ambient.xyz;
@@ -132,11 +134,11 @@ vec3 CalculateDirectionLighting(vec3 norm, float shadow) {
 void main()
 {      
 	vec4 tex = texture(textureUnit0, inValues.textureCoordinate);
-	vec3 norm = inValues.normal;
+	vec3 norm = normalize(allowNormalMapping && useNormalMap ? inValues.tangentSpaceMatrix * normalize(texture(textureUnit1, inValues.textureCoordinate).rgb * 2.0 - 1.0) : inValues.normal);
 	vec3 result = vec3(0.0);
 	
 	for(int i = 0; i < numberOfPointLights; i++) {
-		float dist = distance(inValues.pointLightPositions[i], inValues.position);
+		float dist = distance(pointLights[i].position, inValues.position);
 		if(dist > pointLights[i].lightLength) continue;
 		result += CalculatePointLighting(i, norm, dist);
 	}

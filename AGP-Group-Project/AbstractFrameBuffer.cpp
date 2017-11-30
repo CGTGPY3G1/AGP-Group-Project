@@ -1,5 +1,5 @@
 #include "AbstractFrameBuffer.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	AbstractFrameBuffer::AbstractFrameBuffer(const unsigned int & width, const unsigned int & height) : w(width), h(height){
 		
 	}

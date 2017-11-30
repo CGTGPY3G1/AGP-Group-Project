@@ -1,9 +1,9 @@
 #pragma once
-#ifndef B00289996_SCRIPT_MAMAGEMENT_SYSTEM_H
-#define B00289996_SCRIPT_MAMAGEMENT_SYSTEM_H
+#ifndef B00289996B00227422_SCRIPT_MAMAGEMENT_SYSTEM_H
+#define B00289996B00227422_SCRIPT_MAMAGEMENT_SYSTEM_H
 #include <vector>
 #include <memory>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class ScriptableComponent;
 	class GameObject;
 	class ScriptManagementSystem {
@@ -23,4 +23,4 @@ namespace B00289996 {
 		std::vector<std::shared_ptr<ScriptableComponent>> renderable;
 	};
 }
-#endif // !B00289996_SCRIPT_MAMAGEMENT_SYSTEM_H
+#endif // !B00289996B00227422_SCRIPT_MAMAGEMENT_SYSTEM_H

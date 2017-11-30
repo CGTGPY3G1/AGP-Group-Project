@@ -1,7 +1,7 @@
 #include "AutoRotator.h"
 #include "GameObject.h"
 #include "Transform.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	AutoRotator::AutoRotator() {
 	}
 

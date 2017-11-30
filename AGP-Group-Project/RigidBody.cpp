@@ -6,7 +6,7 @@
 #include "GameObjectData.h"
 #include <iostream>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 
 	RigidBody::RigidBody(const std::weak_ptr<GameObject> & g) : Component(g), body(nullptr) {
 		gameObjectData = new GameObjectData();

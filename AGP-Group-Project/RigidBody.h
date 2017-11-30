@@ -1,13 +1,13 @@
 #pragma once
-#ifndef B00289996_RIGIDBODY_H
-#define B00289996_RIGIDBODY_H
+#ifndef B00289996B00227422_RIGIDBODY_H
+#define B00289996B00227422_RIGIDBODY_H
 #include <memory>
 #include <glm\vec3.hpp>
 #include <glm\gtc\quaternion.hpp>
 #include "btBulletDynamicsCommon.h"
 #include "Component.h"
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	struct RigidBodyData {
 		RigidBodyData(std::weak_ptr<Component> d) : data(d) {}
 		std::weak_ptr<Component> data;
@@ -250,4 +250,4 @@ namespace B00289996 {
 		std::weak_ptr<GameObject> gameObject;
 	};
 }
-#endif // !B00289996_RIGIDBODY_H
+#endif // !B00289996B00227422_RIGIDBODY_H

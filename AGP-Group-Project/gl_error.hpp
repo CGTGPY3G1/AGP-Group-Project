@@ -1,12 +1,12 @@
-#ifndef  B00289996_CHECK_ERROR_H
-#define  B00289996_CHECK_ERROR_H
+#ifndef  B00289996B00227422_CHECK_ERROR_H
+#define  B00289996B00227422_CHECK_ERROR_H
 
 #include <GL\glew.h>
 #include <string>
 #include <sstream>
 #include <iostream>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	
 	void CheckForGLError(const char *file, int line) {
 		GLenum err = glGetError();	
@@ -58,4 +58,4 @@ namespace B00289996 {
 	#define CheckForOpenGLError() CheckForGLError(__FILE__, __LINE__) 
 }
 
-#endif // !B00289996_CHECK_ERROR_H
+#endif // !B00289996B00227422_CHECK_ERROR_H

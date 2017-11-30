@@ -1,11 +1,11 @@
 #pragma once
-#ifndef B00289996_LIGHT_H
-#define B00289996_LIGHT_H
+#ifndef B00289996B00227422_LIGHT_H
+#define B00289996B00227422_LIGHT_H
 #include "Component.h"
 #include <glm\mat4x4.hpp>
 #include <memory>
 #include "Lights.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	enum LightType{
 		DIRECTION_LIGHT,
 		POINT_LIGHT,
@@ -40,4 +40,4 @@ namespace B00289996 {
 	
 }
 
-#endif // !B00289996_LIGHT_H
+#endif // !B00289996B00227422_LIGHT_H

@@ -9,7 +9,7 @@
 #include "TypeConverter.h"
 #include "BulletCollision\CollisionDispatch\btGhostObject.h"
 #include "Collision.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	PhysicsSystem & PhysicsSystem::GetInstance() {
 		static PhysicsSystem instance;
 		return instance;

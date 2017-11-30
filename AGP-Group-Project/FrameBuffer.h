@@ -1,9 +1,9 @@
 #pragma once
-#ifndef B00289996_FRAME_BUFFER_H
-#define B00289996_FRAME_BUFFER_H
+#ifndef B00289996B00227422_FRAME_BUFFER_H
+#define B00289996B00227422_FRAME_BUFFER_H
 #include "AbstractFrameBuffer.h"
 #include <memory>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	struct Texture;
 	class FrameBuffer : public AbstractFrameBuffer {
 	public:
@@ -17,4 +17,4 @@ namespace B00289996 {
 		GLuint depthBuffer = 0;
 	};
 }
-#endif // !B00289996_FRAME_BUFFER_H
+#endif // !B00289996B00227422_FRAME_BUFFER_H

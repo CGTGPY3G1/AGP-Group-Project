@@ -1,8 +1,8 @@
 #pragma once
-#ifndef B00289996_ABSTRACT_FRAME_BUFFER_H
-#define B00289996_ABSTRACT_FRAME_BUFFER_H
+#ifndef B00289996B00227422_B00227422_ABSTRACT_FRAME_BUFFER_H
+#define B00289996B00227422_B00227422_ABSTRACT_FRAME_BUFFER_H
 #include <GL/glew.h>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	/// <summary>
 	/// Used to represent multiple OpenGL Frame Buffer types
 	/// </summary>
@@ -35,4 +35,4 @@ namespace B00289996 {
 		GLuint FBO = 0;
 	};
 }
-#endif // !B00289996_ABSTRACT_FRAME_BUFFER_H
+#endif // !B00289996B00227422_ABSTRACT_FRAME_BUFFER_H

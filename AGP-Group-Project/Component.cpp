@@ -1,6 +1,6 @@
 #include "Component.h"
 #include "GameObject.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	unsigned int IDManager::compCount = 0;
 	std::vector<unsigned int> IDManager::freeIds = std::vector<unsigned int>();
 	unsigned int IDManager::GetNewCompID() {

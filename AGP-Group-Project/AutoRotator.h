@@ -1,10 +1,10 @@
 #pragma once
-#ifndef B00289996_AUTO_ROTATE_H
-#define B00289996_AUTO_ROTATE_H
+#ifndef B00289996B00227422_AUTO_ROTATE_H
+#define B00289996B00227422_AUTO_ROTATE_H
 #include "ScriptableComponent.h"
 #include <glm\gtc\matrix_transform.hpp>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class AutoRotator : public ScriptableComponent {
 	public:
 		/// <summary> Initializes a new instance of the <see cref="AutoRotator"/> class. </summary>
@@ -32,4 +32,4 @@ namespace B00289996 {
 		float alpha = 90.0f;
 	};
 }
-#endif // !B00289996_AUTO_ROTATE_H
+#endif // !B00289996B00227422_AUTO_ROTATE_H

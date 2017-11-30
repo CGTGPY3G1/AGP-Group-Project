@@ -1,12 +1,12 @@
 #pragma once
-#ifndef B00289996_GAME_H
-#define B00289996_GAME_H
+#ifndef B00289996B00227422_GAME_H
+#define B00289996B00227422_GAME_H
 #include <memory>
 #include <vector>
 #include <glm\mat4x4.hpp>
 #include "Lights.h"
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class GameObject;
 	class ShaderProgram;
 	class RenderingSystem;
@@ -45,4 +45,4 @@ namespace B00289996 {
 		glm::vec3 lastVelocity;
 	};
 }
-#endif // !B00289996_GAME_H
+#endif // !B00289996B00227422_GAME_H

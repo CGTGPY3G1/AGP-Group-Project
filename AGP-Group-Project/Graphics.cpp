@@ -1,7 +1,7 @@
 #include "Graphics.h"
 
 #include <iostream>
-namespace B00289996 {
+namespace B00289996B00227422 {
 
 	bool Graphics::Init(const std::string & name, const unsigned int screenWidth, const unsigned int screenHeight){
 		if(!InitRenderingContext(name, screenWidth, screenHeight)) return false;

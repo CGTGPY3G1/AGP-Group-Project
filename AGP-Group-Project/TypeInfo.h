@@ -1,8 +1,8 @@
-#ifndef B00289996_TYPE_INFO_H
-#define B00289996_TYPE_INFO_H
+#ifndef B00289996B00227422_TYPE_INFO_H
+#define B00289996B00227422_TYPE_INFO_H
 
 #include "ComponentHeaders.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class TypeInfo {
 	public:
 		template <typename T> const static ComponentType GetTypeID() { return ComponentType::COMPONENT_NULL; };
@@ -57,4 +57,4 @@ namespace B00289996 {
 		//};
 	};
 }
-#endif // !B00289996_TYPE_INFO_H
+#endif // !B00289996B00227422_TYPE_INFO_H

@@ -1,9 +1,9 @@
 #pragma once
-#ifndef B00289996_FRUSTUM_H
-#define B00289996_FRUSTUM_H
+#ifndef B00289996B00227422_FRUSTUM_H
+#define B00289996B00227422_FRUSTUM_H
 #include <glm\vec3.hpp>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	struct OBB;
 	struct Sphere;
 	class Frustum {
@@ -20,4 +20,4 @@ namespace B00289996 {
 	};
 }
 
-#endif // !B00289996_FRUSTUM_H
+#endif // !B00289996B00227422_FRUSTUM_H

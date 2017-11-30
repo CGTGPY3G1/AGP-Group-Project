@@ -1,12 +1,12 @@
 #pragma once
-#ifndef B00289996_CAMERA_H
-#define B00289996_CAMERA_H
+#ifndef B00289996B00227422_CAMERA_H
+#define B00289996B00227422_CAMERA_H
 #include "Component.h"
 #include "Frustum.h"
 #include <glm\mat4x4.hpp>
 #include <memory>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class ShaderProgram;
 	class Material;
 
@@ -38,4 +38,4 @@ namespace B00289996 {
 	};
 }
 
-#endif // !B00289996_CAMERA_H
+#endif // !B00289996B00227422_CAMERA_H

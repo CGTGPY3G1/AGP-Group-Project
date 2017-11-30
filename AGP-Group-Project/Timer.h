@@ -1,7 +1,7 @@
 #pragma once
-#ifndef B00289996_TIMER_H
-#define B00289996_TIMER_H
-namespace B00289996 {
+#ifndef B00289996B00227422_TIMER_H
+#define B00289996B00227422_TIMER_H
+namespace B00289996B00227422 {
 	class Timer {
 		friend class Engine;
 	public:
@@ -32,4 +32,4 @@ namespace B00289996 {
 		static unsigned int currentTime, lastFrameTime;
 	};
 }
-#endif // !B00289996_TIMER_H
+#endif // !B00289996B00227422_TIMER_H

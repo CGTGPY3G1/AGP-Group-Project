@@ -1,10 +1,10 @@
 #pragma once
-#ifndef B00289996_COLLISION_H
-#define B00289996_COLLISION_H
+#ifndef B00289996B00227422_COLLISION_H
+#define B00289996B00227422_COLLISION_H
 
 #include "GameObject.h"
 #include <glm\vec3.hpp>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	/// <summary>
 	/// Data from a collision
 	/// </summary>
@@ -44,4 +44,4 @@ namespace B00289996 {
 		const std::weak_ptr<GameObject> gameObject;
 	};
 }
-#endif // !B00289996_COLLISION_H
+#endif // !B00289996B00227422_COLLISION_H

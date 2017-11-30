@@ -1,10 +1,10 @@
 #pragma once
-#ifndef B00289996_LIGHT_FLICKER_H
-#define B00289996_LIGHT_FLICKER_H
+#ifndef B00289996B00227422_LIGHT_FLICKER_H
+#define B00289996B00227422_LIGHT_FLICKER_H
 #include "ScriptableComponent.h"
 #include <glm\gtc\matrix_transform.hpp>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class Light;
 	class Transform;
 	class LightFlicker : public ScriptableComponent {
@@ -25,4 +25,4 @@ namespace B00289996 {
 		float min, max, current, speed = 1.5f;
 	};
 }
-#endif // !B00289996_LIGHT_FLICKER_H
+#endif // !B00289996B00227422_LIGHT_FLICKER_H

@@ -2,7 +2,7 @@
 #include "Texture.h"
 #include <iostream>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 
 	FrameBuffer::FrameBuffer(const unsigned int & width, const unsigned int & height, const bool & autoGenerate) : AbstractFrameBuffer(width, height) {
 		if(autoGenerate) Generate();

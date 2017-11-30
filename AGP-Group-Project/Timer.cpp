@@ -1,6 +1,6 @@
 #include "Timer.h"
 #include <SDL_timer.h>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	const float Timer::FIXED_DELTA_TIME = 1.0f/60.0f;
 	float Timer::deltaTime = 0.0f;
 	unsigned int  Timer::currentTime = 0, Timer::lastFrameTime = 0;

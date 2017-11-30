@@ -1,12 +1,12 @@
 #pragma once
-#ifndef B00289996_DEBUG_DRAW_H
-#define B00289996_DEBUG_DRAW_H
+#ifndef B00289996B00227422_DEBUG_DRAW_H
+#define B00289996B00227422_DEBUG_DRAW_H
 #include "Bounds.h"
 #include <glm\vec3.hpp>
 #include <LinearMath/btIDebugDraw.h>
 #include <vector>
 #include <memory>
-namespace B00289996 {
+namespace B00289996B00227422 {
 
 	class ShaderProgram;
 	/// <summary>
@@ -77,4 +77,4 @@ namespace B00289996 {
 		std::shared_ptr<ShaderProgram> shader;
 	};
 }
-#endif // !B00289996_DEBUG_DRAW_H
+#endif // !B00289996B00227422_DEBUG_DRAW_H

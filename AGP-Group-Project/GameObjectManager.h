@@ -1,11 +1,11 @@
 #pragma once
-#ifndef B00289996_GAMEOBJECT_MANAGER_H
-#define B00289996_GAMEOBJECT_MANAGER_H
+#ifndef B00289996B00227422_GAMEOBJECT_MANAGER_H
+#define B00289996B00227422_GAMEOBJECT_MANAGER_H
 #include <memory>
 #include <algorithm>
 #include <vector>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class GameObject;
 	class GameObjectManager {
 	public:
@@ -29,5 +29,5 @@ namespace B00289996 {
 	};
 	
 }
-#endif // !B00289996_GAMEOBJECT_MANAGER_H
+#endif // !B00289996B00227422_GAMEOBJECT_MANAGER_H
 

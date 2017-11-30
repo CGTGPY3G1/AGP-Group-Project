@@ -10,7 +10,7 @@
 #include <soil.h>
 #include <iostream>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 
 	void PrintShaderError(const GLuint & id) {
 		GLint logLength = 0;

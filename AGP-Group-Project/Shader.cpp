@@ -3,7 +3,7 @@
 #include <glm\mat4x4.hpp>
 #include <glm\gtc\type_ptr.hpp>
 #include "gl_error.hpp"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	GLuint ShaderProgram::currentShader = 0;
 
 	ShaderProgram::ShaderProgram() {

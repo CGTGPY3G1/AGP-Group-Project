@@ -7,7 +7,7 @@
 #include <glm\gtx\quaternion.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <btBulletDynamicsCommon.h>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	struct OBB;
 	struct Sphere;
 	class Transform : public Component, public btMotionState {

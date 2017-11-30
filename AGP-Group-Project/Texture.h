@@ -1,11 +1,11 @@
 #pragma once
-#ifndef B00289996_TEXTURE_H
-#define B00289996_TEXTURE_H
+#ifndef B00289996B00227422_TEXTURE_H
+#define B00289996B00227422_TEXTURE_H
 #include <string>
 #include <GL\glew.h>
 #include <memory>
 #include "Shader.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	enum TextureType : unsigned int {
 		DIFFUSE = 0,
 		NORMAL_MAP = 1,
@@ -30,4 +30,4 @@ namespace B00289996 {
 		TextureType t;
 	};
 }
-#endif // !B00289996_TEXTURE_H
+#endif // !B00289996B00227422_TEXTURE_H

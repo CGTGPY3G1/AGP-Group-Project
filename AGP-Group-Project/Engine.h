@@ -1,10 +1,10 @@
 #pragma once
-#ifndef B00289996_ENGINE_H
-#define B00289996_ENGINE_H
+#ifndef B00289996B00227422_ENGINE_H
+#define B00289996B00227422_ENGINE_H
 #include <memory>
 #include <GL/glew.h>
 #include <SDL.h>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	/*class Graphics;
 	class Input;
 	class Time;
@@ -43,4 +43,4 @@ namespace B00289996 {
 	};
 }
 
-#endif // !B00289996_ENGINE_H
+#endif // !B00289996B00227422_ENGINE_H

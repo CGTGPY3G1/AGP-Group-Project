@@ -1,6 +1,6 @@
 #pragma once
-#ifndef B00289996_PHYSICS_SYSTEM_H
-#define B00289996_PHYSICS_SYSTEM_H
+#ifndef B00289996B00227422_PHYSICS_SYSTEM_H
+#define B00289996B00227422_PHYSICS_SYSTEM_H
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
 #include <glm\vec3.hpp>
@@ -8,7 +8,7 @@
 #include <vector>
 #include "Message.h"
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class GameObject;
 	struct Collision;
 	struct RayCastHit;
@@ -162,4 +162,4 @@ namespace B00289996 {
 		bool drawDebug = false;
 	};
 }
-#endif // !B00289996_PHYSICS_SYSTEM_H
+#endif // !B00289996B00227422_PHYSICS_SYSTEM_H

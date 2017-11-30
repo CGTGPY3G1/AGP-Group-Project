@@ -6,7 +6,7 @@
 #include <glm\gtc\type_ptr.hpp>
 #include <algorithm>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	const float Material::min = 0.0f, Material::max = 1.0f;
 
 	void Material::Bind(const std::shared_ptr<ShaderProgram> & differentShader) {
@@ -22,10 +22,8 @@ namespace B00289996 {
 		for(std::vector<std::shared_ptr<Texture>>::iterator i = textures.begin(); i != textures.end(); ++i) {
 			(*i)->Bind(currentShader);
 			if(!useNormalMap && (*i)->type == NORMAL_MAP) useNormalMap = true;
-			if(!useHeightMap && (*i)->type == HEIGHT_MAP) useHeightMap = true;
 		}
 		currentShader->SetUniform<bool>("useNormalMap", useNormalMap);
-		currentShader->SetUniform<bool>("useHeightMap", useHeightMap);
 	}
 
 	Material::Material() : ambient(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f)), diffuse(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), specular(glm::vec4(0.4f, 0.4f, 0.4f, 1.0f)), shininess(0.8f) {

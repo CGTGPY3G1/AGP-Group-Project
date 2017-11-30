@@ -1,11 +1,11 @@
 #pragma once
-#ifndef B00289996_MESH_RENDERER_H
-#define B00289996_MESH_RENDERER_H
+#ifndef B00289996B00227422_MESH_RENDERER_H
+#define B00289996B00227422_MESH_RENDERER_H
 #include "Component.h"
 #include "Bounds.h"
 #include <memory>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	class ShaderProgram;
 	class Material;
 	class Mesh;
@@ -36,4 +36,4 @@ namespace B00289996 {
 	};
 }
 
-#endif // !B00289996_MESH_RENDERER_H
+#endif // !B00289996B00227422_MESH_RENDERER_H

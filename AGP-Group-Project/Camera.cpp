@@ -3,7 +3,7 @@
 #include "Transform.h"
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\matrix_inverse.hpp>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	std::shared_ptr<Camera> Camera::mainCamera;
 
 	Camera::Camera(const std::weak_ptr<GameObject>& g) : Component(g) {

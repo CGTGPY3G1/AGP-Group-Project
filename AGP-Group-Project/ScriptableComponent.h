@@ -1,9 +1,9 @@
 #pragma once
-#ifndef B00289996_SCRIPTABLE_COMPONENT_H
-#define B00289996_SCRIPTABLE_COMPONENT_H
+#ifndef B00289996B00227422_SCRIPTABLE_COMPONENT_H
+#define B00289996B00227422_SCRIPTABLE_COMPONENT_H
 #include "Component.h"
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	struct Collision;
 	class ScriptableComponent : public Component {
 	public:
@@ -27,4 +27,4 @@ namespace B00289996 {
 	};
 
 }
-#endif // !B00289996_SCRIPTABLE_COMPONENT_H
+#endif // !B00289996B00227422_SCRIPTABLE_COMPONENT_H

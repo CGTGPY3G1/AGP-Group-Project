@@ -1,6 +1,6 @@
 #pragma once
-#ifndef B00289996_GAMEOBJECT_H
-#define B00289996_GAMEOBJECT_H
+#ifndef B00289996B00227422_GAMEOBJECT_H
+#define B00289996B00227422_GAMEOBJECT_H
 #include "ComponentManager.h"
 #include "TypeInfo.h"
 #include <memory>
@@ -10,7 +10,7 @@
 #include <glm\vec3.hpp>
 #include <glm\gtc\quaternion.hpp>
 
-namespace B00289996 {
+namespace B00289996B00227422 {
 	struct Collision;
 	class GameObject : public std::enable_shared_from_this<GameObject> {
 	public:
@@ -156,4 +156,4 @@ namespace B00289996 {
 		std::string name;
 	};
 }
-#endif // !B00289996_GAMEOBJECT_H
+#endif // !B00289996B00227422_GAMEOBJECT_H

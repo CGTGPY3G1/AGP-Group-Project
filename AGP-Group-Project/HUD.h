@@ -1,13 +1,13 @@
 #pragma once
 
-#ifndef B00289996_HUD_H
-#define B00289996_HUD_H
+#ifndef B00289996B00227422_HUD_H
+#define B00289996B00227422_HUD_H
 #include <SDL_ttf.h>
 #include <GL/glew.h>
 #include <vector>
 #include <memory>
 #include <glm\mat4x4.hpp>
-namespace B00289996 {
+namespace B00289996B00227422 {
 	/// <summary>
 	/// Horizontal allignment
 	/// </summary>
@@ -103,7 +103,7 @@ namespace B00289996 {
 		std::shared_ptr<ShaderProgram> shader;
 	};
 }
-#endif // !B00289996_HUD_H
+#endif // !B00289996B00227422_HUD_H
 
 
 

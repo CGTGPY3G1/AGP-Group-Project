@@ -2,7 +2,7 @@
 #include "ComponentHeaders.h"
 #include "GameObject.h"
 #include "Collision.h"
-namespace B00289996 {
+namespace B00289996B00227422 {
 	ComponentManager::ComponentManager() {
 	}
 
