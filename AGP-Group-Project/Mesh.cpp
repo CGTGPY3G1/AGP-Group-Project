@@ -68,16 +68,17 @@ namespace B00289996B00227422 {
 
 	void Mesh::Build() {
 		// Generate VBO and VAOs
-
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
 
 		
-
+		// use a single buffer to store all vertex data
 		glGenBuffers(1, &VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		//load the vertex spectification data int the buffer
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
+		// define the offsets for each buffer
 		glVertexAttribPointer(VERTEX_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 		glEnableVertexAttribArray(VERTEX_POSITION);
 		
@@ -95,7 +96,7 @@ namespace B00289996B00227422 {
 		
 		glVertexAttribPointer(VERTEX_COLOUR, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, colour));
 		glEnableVertexAttribArray(VERTEX_COLOUR);
-
+		// generate and populate the index buffer
 		glGenBuffers(1, &IBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
@@ -109,11 +110,17 @@ namespace B00289996B00227422 {
 		bool first = true;
 		for (std::vector<Vertex>::iterator i = vertices.begin(); i < vertices.end(); ++i) {
 			const glm::vec3 pos = (*i).position;
-			if (first) {
-				min = pos; max = pos; first = false;
+			if (first) {//if this is the first iteration of the loop
+				min = pos; max = pos; first = false; // set the min and max values 
+				newRadius = glm::length(pos); // and the radius
+				continue;// restart the loop
 			}
+			// if the distance to the vertex is greater than the current radius
+			// set it as the current radius
 			const float len = glm::length(pos);
-			if (len > newRadius) newRadius = len;
+			if (len > newRadius) newRadius = len; 
+			// if any of the positions components are greater than the minimum/maximum values
+			// replace the relevant component with that value
 			if (pos.x > max.x) max.x = pos.x;
 			else if (pos.x < min.x) min.x = pos.x;
 			if (pos.y > max.y) max.y = pos.y;
@@ -121,10 +128,7 @@ namespace B00289996B00227422 {
 			if (pos.z > max.z) max.z = pos.z;
 			else if (pos.z < min.z) min.z = pos.z;
 		}
-		const float epsilon = 0.0001f;
-		if (std::abs(min.x - max.x) < epsilon) { min.x -= epsilon; max.x += epsilon; }
-		if (std::abs(min.y - max.y) < epsilon) { min.y -= epsilon; max.y += epsilon; }
-		if (std::abs(min.z - max.z) < epsilon) { min.z -= epsilon; max.z += epsilon; }
+		// updat the bounding box and radius
 		aabb.min = min; aabb.max = max;
 		radius = newRadius;
 		dirty = false;
@@ -137,6 +141,7 @@ namespace B00289996B00227422 {
 	}
 
 	void Mesh::UpdateVerts() {
+		if (!dirty) dirty = true;
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
@@ -165,6 +170,7 @@ namespace B00289996B00227422 {
 	}
 
 	void Mesh::UpdateIndices() {
+		if (!dirty) dirty = true;
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
@@ -178,10 +184,12 @@ namespace B00289996B00227422 {
 		glBindVertexArray(0);
 	}
 	const AABB Mesh::GetAABB() {
+		// if geometric changes have been made to the mesh, recalculate it's bounds, else return the aabb
 		if (dirty) RecalculateBounds();
 		return aabb;
 	}
 	const float Mesh::GetRadius() {
+		// if geometric changes have been made to the mesh, recalculate it's radius, else return the stored radius
 		if (dirty) RecalculateBounds();
 		return radius;
 	}

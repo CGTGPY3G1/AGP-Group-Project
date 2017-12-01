@@ -24,7 +24,7 @@ namespace B00289996B00227422 {
 
 	const bool Frustum::CheckSphere(const Sphere & sphere, const bool & fullyEnclosed) const {
 		glm::vec3 toSphere = sphere.centre - position; // spheres position from frustums perspective
-		// get the scaler projection of toSphere onto the frustums local forward direction
+		// get the scaler viewprojection of toSphere onto the frustums local forward direction
 		const float forwardProjection = glm::dot(forward, toSphere);
 		const float radius = sphere.radius;
 
@@ -39,9 +39,9 @@ namespace B00289996B00227422 {
 		// cannot be intersected by the frustum
 		else if (forwardProjection + radius < near || far < forwardProjection - radius)  return false;
 
-		// get the scaler projection of toSphere onto the frustums local right direction
+		// get the scaler viewprojection of toSphere onto the frustums local right direction
 		const float rightProjection = glm::dot(right, toSphere);
-		// scale the forward projection by the horizontal projection factor
+		// scale the forward viewprojection by the horizontal viewprojection factor
 		float limit = horizontalProjectionFactor * forwardProjection; 
 		// if the outer projected extents of the sphere are outside of the frusums horizontal extents 
 		// then the sphere cannot be fully enclosed by the frustum
@@ -53,9 +53,9 @@ namespace B00289996B00227422 {
 		// then the sphere cannot be intersected by the frustum
 		else if (rightProjection + radius*radiusScaleX < -limit || limit < rightProjection - radius*radiusScaleX) return false;
 
-		// get the scaler projection of toSphere onto the frustums local up direction
+		// get the scaler viewprojection of toSphere onto the frustums local up direction
 		const float upProjection = glm::dot(up, toSphere); 
-		// scale the forward projection by the vertical projection factor
+		// scale the forward viewprojection by the vertical viewprojection factor
 		limit = verticalProjectionFactor * forwardProjection;
 		// if the outer projected extents of the sphere are outside of the frusums vertical extents 
 		// then the sphere cannot be fully enclosed by the frustum
@@ -91,25 +91,25 @@ namespace B00289996B00227422 {
 			inRangeX = inRangeY = inRangeZ = false;
 			point = corners[i];
 
-			const float rightProjection = glm::dot(point, right); // get the scaler projection of the corner onto the frustums local right direction
-			const float upProjection = glm::dot(point, up); // get the scaler projection of the corner onto the frustums local up direction
-			const float forwardProjection = glm::dot(point, forward); // get the scaler projection of the corner onto the frustums local forward direction
+			const float rightProjection = glm::dot(point, right); // get the scaler viewprojection of the corner onto the frustums local right direction
+			const float upProjection = glm::dot(point, up); // get the scaler viewprojection of the corner onto the frustums local up direction
+			const float forwardProjection = glm::dot(point, forward); // get the scaler viewprojection of the corner onto the frustums local forward direction
 
-			// if the right projection value is less than the horizontal extents of the frustum at the projected forward point then the vertex must be outside the left extent of the frustum
+			// if the right viewprojection value is less than the horizontal extents of the frustum at the projected forward point then the vertex must be outside the left extent of the frustum
 			if (rightProjection < -horizontalProjectionFactor * forwardProjection) outOfRangeLeft++;
 			// if the right prjection value is greater than the horizontal extents of the frustum at the projected forward point then the vertex must be outside the right extent of the frustum
 			else if (rightProjection > horizontalProjectionFactor * forwardProjection) outOfRangeRight++;
 			// the vertex is in the frustums horizontal range 
 			else inRangeX = true;
 
-			// if the up projection value is less than the vertical extents of the frustum at the projected forward point then the vertex must be outside the bottom extent of the frustum
+			// if the up viewprojection value is less than the vertical extents of the frustum at the projected forward point then the vertex must be outside the bottom extent of the frustum
 			if (upProjection < -verticalProjectionFactor * forwardProjection) outOfRangeBottom++;
 			// if the up prjection value is greater than the vertical extents of the frustum at the projected forward point then the vertex must be outside the top extent of the frustum
 			else if (upProjection > verticalProjectionFactor * forwardProjection) outOfRangeTop++;
 			// the vertex is in the frustums vertical range 
 			else inRangeY = true;
 
-			// if the forward projection value is less than the frustums near value then the vertex must be behind the frustum
+			// if the forward viewprojection value is less than the frustums near value then the vertex must be behind the frustum
 			if (forwardProjection < near) outOfRangeNear++;
 			// if the forward prjection value is greater than the frustums far value then the vertex must be beyond the far plane
 			else if (forwardProjection > far) outOfRangeFar++;

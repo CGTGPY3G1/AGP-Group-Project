@@ -5,18 +5,20 @@
 #include "Shader.h"
 #include "Mesh.h"
 namespace B00289996B00227422 {
-	MeshRenderer::MeshRenderer(const std::weak_ptr<GameObject>& g) : Component(g) {
+	MeshRenderer::MeshRenderer(const std::weak_ptr<GameObject>& g) : Component(g), dirty(false){
 	}
 
 	MeshRenderer::~MeshRenderer() {
 	}
 
 	void MeshRenderer::AddMesh(const std::shared_ptr<Mesh> & toAdd) {
+		if (!dirty) dirty = true;
 		meshes.push_back(toAdd);
 		RecalculateBounds();
 	}
 
 	void MeshRenderer::AddMeshes(const std::vector<std::shared_ptr<Mesh>> & toAdd) {
+		if (!dirty) dirty = true;
 		for(size_t i = 0; i < toAdd.size(); i++) {
 			meshes.push_back(toAdd[i]);
 		}
@@ -44,7 +46,7 @@ namespace B00289996B00227422 {
 		material->Bind();
 		std::shared_ptr<ShaderProgram> shader = material->GetShader();
 		std::shared_ptr<Transform> transform = GetComponent<Transform>().lock();
-		shader->SetUniform("modelview", transform->GetWorldTransform());
+		shader->SetUniform("model", transform->GetWorldTransform());
 		shader->SetUniform("normalMatrix", transform->GetNormalMatrix());
 		for(std::vector<std::shared_ptr<Mesh>>::iterator i = meshes.begin(); i != meshes.end(); ++i) {
 			(*i)->Render();
@@ -52,10 +54,12 @@ namespace B00289996B00227422 {
 	}
 
 	const AABB MeshRenderer::GetAABB() {
+		if (dirty) RecalculateBounds();
 		return aabb;
 	}
 
 	const float MeshRenderer::GetRadius() {
+		if (dirty) RecalculateBounds();
 		return radius;
 	}
 
@@ -74,5 +78,6 @@ namespace B00289996B00227422 {
 		}
 		aabb.min = min; aabb.max = max;
 		radius = rad;
+		dirty = false;
 	}
 }

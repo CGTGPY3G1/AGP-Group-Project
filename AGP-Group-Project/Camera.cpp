@@ -4,6 +4,9 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\matrix_inverse.hpp>
 namespace B00289996B00227422 {
+	/// <summary>
+	/// The main camera{CC2D43FA-BBC4-448A-9D0B-7B57ADF2655C}
+	/// </summary>
 	std::shared_ptr<Camera> Camera::mainCamera;
 
 	Camera::Camera(const std::weak_ptr<GameObject>& g) : Component(g) {
@@ -17,8 +20,11 @@ namespace B00289996B00227422 {
 	void Camera::SetProjection(const float & width, const float & height, const float & near, const float & far, const float & fov) {
 		this->width = width; this->height = height; this->near = near; this->far = far; this->fov = fov;
 		const float aspect = width / height;
-		projection = glm::perspective(glm::radians(fov), aspect, near, far);
-		frustum.DefinePerspective(glm::radians(fov), aspect, near, far);
+		// convert the FOV to radians
+		const float rFOV = glm::radians(fov); 
+		// use the same values to set up the camera and frustum viewprojections
+		viewprojection = glm::perspective(rFOV, aspect, near, far);
+		frustum.DefinePerspective(rFOV, aspect, near, far);
 	}
 
 	void Camera::SetAsMain() {
@@ -51,18 +57,20 @@ namespace B00289996B00227422 {
 
 	glm::mat4 Camera::GetView() {
 		std::shared_ptr<Transform> transform = GetComponent<Transform>().lock();
+		// calculate a glsl compatable view matrix using the cameras objects transform component
 		return glm::lookAt(transform->GetPosition(), transform->GetPosition() + transform->GetForward(), transform->GetUp());
 	}
 
 	glm::mat4 Camera::GetProjection() {
-		return projection;
+		return viewprojection;
 	}
 
 	glm::mat4 Camera::GetViewProjection() {
-		return projection * GetView();
+		return viewprojection * GetView();
 	}
 
 	Frustum Camera::GetFrustum() {
+		// update the frustums location and rotation using the cameras objects transform component
 		std::shared_ptr<Transform> transform = GetComponent<Transform>().lock();
 		frustum.DefineView(transform->GetPosition(), transform->GetForward(), transform->GetUp());
 		return frustum;

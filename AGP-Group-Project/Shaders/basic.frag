@@ -1,4 +1,4 @@
-// basic.frag
+// used by DebugDraw to draw lines
 #version 330
 
 in vec3 ex_Color;

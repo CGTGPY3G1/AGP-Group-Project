@@ -170,6 +170,7 @@ namespace B00289996B00227422 {
 
 		//Models
 		const float startX = -4.5f, startZ = -4.5f;
+		// position 100 cubes in a square formation
 		for (size_t a = 0; a < 10; a++) {
 			for (size_t i = 0; i < 10; i++) {
 				std::shared_ptr<GameObject> cube = GameObjectManager::GetInstance().CreateGameObject("Cube").lock();
@@ -192,15 +193,15 @@ namespace B00289996B00227422 {
 		std::shared_ptr<GameObject> ground = GameObjectManager::GetInstance().CreateGameObject("Ground").lock();
 		std::shared_ptr<MeshRenderer> groundRenderer = ground->AddComponent<MeshRenderer>().lock();
 		groundRenderer->AddMeshes(FileLoader::GetInstance().LoadMeshes("OBJModels//ground.obj", false));
-		groundRenderer->GetMesh(0)->ScaleUVs(20.0f);
+		groundRenderer->GetMesh(0)->ScaleUVs(20.0f); // scale the UV to match other objects
 		std::shared_ptr<Material> groundMaterial = std::make_shared<Material>();
 		groundMaterial->SetShader(shader);
 		groundMaterial->AddTexture(FileLoader::GetInstance().LoadTexture("Textures//pavement_diffuse.bmp", DIFFUSE));
 		groundMaterial->AddTexture(FileLoader::GetInstance().LoadTexture("Textures//pavement_normal.bmp", NORMAL_MAP));
 		groundRenderer->SetMaterial(groundMaterial);
-		ground->GetComponent<Transform>().lock()->Scale(5.0f);
+		ground->GetComponent<Transform>().lock()->Scale(5.0f); // scale the quad to the scene boundaries
 		std::shared_ptr<RigidBody> groundRigidBody = ground->AddComponent<RigidBody>().lock();
-		groundRigidBody->Init(false);
+		groundRigidBody->Init(false);// initialize as kinematic
 		groundRigidBody->AttachBox(glm::vec3(0.0f), glm::vec3(10.0f, 0.001f, 10.0f), 0.0f);
 		
 		//Set-Up Player
@@ -215,7 +216,7 @@ namespace B00289996B00227422 {
 		player->GetComponent<Transform>().lock()->SetPosition(1.0f, 0.2f, -0.5f);
 		player->GetComponent<Transform>().lock()->Scale(0.1f);
 		std::shared_ptr<RigidBody> playerBody = player->AddComponent<RigidBody>().lock();
-		playerBody->Init(true, 0.05f, 0.01f);
+		playerBody->Init(true, 0.05f, 0.01f);// initialize as dynamic
 		playerBody->AttachSphere(glm::vec3(0.0f), 0.1f, 9.0f);
 		playerBody->SetRestitition(0.5f);
 		ToggleDirectionalLight();

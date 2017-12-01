@@ -10,18 +10,20 @@ namespace B00289996B00227422 {
 	const float Material::min = 0.0f, Material::max = 1.0f;
 
 	void Material::Bind(const std::shared_ptr<ShaderProgram> & differentShader) {
+		// if an alternative shader has been provided, use it, else, use the materials shader shader
 		std::shared_ptr<ShaderProgram> currentShader = (differentShader.use_count() > 0) ? differentShader : shader;
 		currentShader->Bind();
-		const GLuint program = currentShader->GetID();
+		// set the material uniforms
 		currentShader->SetUniform<glm::vec4>("material.ambient", ambient);
 		currentShader->SetUniform<glm::vec4>("material.diffuse", diffuse);
 		currentShader->SetUniform<glm::vec4>("material.specular", specular);
 		currentShader->SetUniform<float>("material.shininess", shininess);
 		bool useNormalMap = false;
-		bool useHeightMap = false;
 		for(std::vector<std::shared_ptr<Texture>>::iterator i = textures.begin(); i != textures.end(); ++i) {
+			// bind the texture to the shader
 			(*i)->Bind(currentShader);
-			if(!useNormalMap && (*i)->type == NORMAL_MAP) useNormalMap = true;
+			// if a normal map is found, enable normal mapping in the shader
+			if(!useNormalMap && (*i)->type == NORMAL_MAP) useNormalMap = true; 
 		}
 		currentShader->SetUniform<bool>("useNormalMap", useNormalMap);
 	}

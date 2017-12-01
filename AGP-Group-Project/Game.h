@@ -24,15 +24,18 @@ namespace B00289996B00227422 {
 		void FixedUpdate(const float & fixedDeltaTime);
 		/// <summary> Renders  the Game. </summary>
 		void Render();
-		/// <summary>
-		/// Determines whether the Game is running.
-		/// </summary>
+		/// <summary> Determines whether the Game is running. </summary>
 		/// <returns> false if game is running</returns>
 		const bool GameOver() const;
-
+		/// <summary>Toggles the point lights.</summary>
 		void TogglePointLights();
+		/// <summary>Toggles the directional light.</summary>
 		void ToggleDirectionalLight();
+		/// <summary> pauses/unpauses the scene.</summary>
+		/// <param name="shouldRun">true if the scene should be updates, else false.</param>
 		void SetRunning(const bool & shouldRun);
+		/// <summary>Determines whether the scene is paused.</summary>
+		/// <returns>true if paused, else false</returns>
 		const bool IsPaused() const;
 	private:
 		std::shared_ptr<GameObject> CreateWall(const glm::vec3 & position, const float & angle = 0.0f);

@@ -13,37 +13,38 @@ namespace B00289996B00227422 {
 		glDeleteProgram(id);
 	}
 
-	void ShaderProgram::Init(const std::string & vert, const std::string & frag) {
-	}
-
 	const GLint ShaderProgram::GetAttributeLocation(const GLchar * name) const {
 		return glGetAttribLocation(id, name);
 	}
 
-	const void ShaderProgram::BindAttributeLocation(GLuint index, const GLchar * name) const {
+	void ShaderProgram::BindAttributeLocation(GLuint index, const GLchar * name) const {
 		glBindAttribLocation(id, index, name);
 	}
 
 	void ShaderProgram::Link() {
 		int isLinked = -1;
+		// check if the shader is already linked
 		glGetProgramiv(id, GL_LINK_STATUS, &isLinked);
 		if(isLinked != GL_FALSE) std::cout << "Already Linked" << std::endl;
-		else {
+		else {// if not try and link t
 			glLinkProgram(id);
 			glGetProgramiv(id, GL_LINK_STATUS, &isLinked);
-			if(isLinked == GL_FALSE) std::cout << "Failed Linking Shader" << std::endl;
-			for(std::vector<GLuint>::iterator i = shaderIDs.begin(); i != shaderIDs.end(); ++i) glDetachShader(id, (*i));
+			// if the shader failed to link
+			if(isLinked == GL_FALSE) std::cout << "Failed Linking Shader" << std::endl; // report the failure
+			else {// else store the shader ids
+				for (std::vector<GLuint>::iterator i = shaderIDs.begin(); i != shaderIDs.end(); ++i) glDetachShader(id, (*i));
+			}
 		}
 	}
 
-	const void ShaderProgram::Bind() const {
-		if(id != currentShader) {
+	void ShaderProgram::Bind() const {
+		if(id != currentShader) { // make sure the shader isn't already bound
 			glUseProgram(id);
 			currentShader = id;
 		}
 	}
 
-	const void ShaderProgram::UnBind() const {
+	void ShaderProgram::UnBind() const {
 		glUseProgram(0);
 		currentShader = 0;
 	}
@@ -123,39 +124,50 @@ namespace B00289996B00227422 {
 	}
 
 	std::vector<ShaderValue> ShaderProgram::GetAttributes() {
+		// get the number of attributes attached to the shader
 		GLint count;
 		glGetProgramiv(id, GL_ACTIVE_ATTRIBUTES, &count);
+		// create an array to store them
 		std::vector<ShaderValue> attributes;
-		GLenum type;
-		const GLsizei maxNameLength = 50;
-		GLchar name[maxNameLength];
-		GLsizei realNameLength;
-		GLint size;
-		for(GLint i = 0; i < count; i++) {
-			glGetActiveAttrib(id, i, maxNameLength, &realNameLength, &size, &type, name);
-			ShaderValue v;
-			v.name.append(name, realNameLength);
-			v.type = type;
-			attributes.push_back(v);
+		if (count > 0) { // if there are any attributes attached to this shader
+			attributes.reserve(count); 
+			// temo bariables
+			GLenum type;
+			const GLsizei maxNameLength = 50;
+			GLchar name[maxNameLength];
+			GLsizei nameLength;
+			GLint size;
+			for (GLint i = 0; i < count; i++) {
+				// get the name and type of each attribute and add them to the array
+				glGetActiveAttrib(id, i, maxNameLength, &nameLength, &size, &type, name);
+				ShaderValue v;
+				v.name.append(name, nameLength);
+				v.type = type;
+				attributes.push_back(v);
+			}
 		}
 		return attributes;
 	}
 
 	std::vector<ShaderValue> ShaderProgram::GetUniforms() {
+		// get the number of uniforms defined in the shader
 		GLint count;
 		glGetProgramiv(id, GL_ACTIVE_UNIFORMS, &count);
 		std::vector<ShaderValue> uniforms;
-		GLenum type;
-		const GLsizei maxNameLength = 50;
-		GLchar name[maxNameLength];
-		GLsizei realNameLength;
-		GLint size;
-		for(GLint i = 0; i < count; i++) {
-			glGetActiveUniform(id, i, maxNameLength, &realNameLength, &size, &type, name);
-			ShaderValue v;
-			v.name.append(name, realNameLength);
-			v.type = type;
-			uniforms.push_back(v);
+		if (count > 0) {// if there are any uniforms defined in this shader
+			GLenum type;
+			const GLsizei maxNameLength = 50;
+			GLchar name[maxNameLength];
+			GLsizei nameLength;
+			GLint size;
+			for (GLint i = 0; i < count; i++) {
+				// get the name and type of each uniform and add them to the array
+				glGetActiveUniform(id, i, maxNameLength, &nameLength, &size, &type, name);
+				ShaderValue v;
+				v.name.append(name, nameLength);
+				v.type = type;
+				uniforms.push_back(v);
+			}
 		}
 		return uniforms;
 	}

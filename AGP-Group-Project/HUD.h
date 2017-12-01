@@ -32,41 +32,34 @@ namespace B00289996B00227422 {
 		std::shared_ptr<ShaderProgram> shader;
 	};
 	
-	/// <summary>
-	/// the Heads Up Display
-	/// </summary>
+	/// <summary> the Heads Up Display </summary>
 	class HUD {
 	public:
-		/// <summary>
-		/// Gets the Singleton instance.
-		/// </summary>
+		/// <summary> Gets the Singleton instance. </summary>
 		/// <returns>the Singleton instance</returns>
 		static HUD & GetInstance();
-		/// <summary>
-		/// Finalizes an instance of the <see cref="HUD"/> class.
-		/// </summary>
+		/// <summary> Finalizes an instance of the <see cref="HUD"/> class. </summary>
 		~HUD();
-		/// <summary>
-		/// Loads the font.
-		/// </summary>
+		/// <summary> Loads the font. </summary>
 		/// <param name="fontName">Name of the font.</param>
 		void LoadFont(const char * fontName);
-		/// <summary>
-		/// Draws text to the screen.
-		/// </summary>
-		/// <param name="toDraw">To text to draw.</param>
+		/// <summary> Draws text to the screen. </summary>
+		/// <param name="toDraw">The text to draw.</param>
 		/// <param name="x">The x position.</param>
 		/// <param name="y">The y position.</param>
 		/// <param name="width">The width.</param>
 		/// <param name="height">The height.</param>
 		/// <param name="alignment">The alignment.</param>
 		void DrawText(const std::string & toDraw, const float & x, const float & y, const float & width, const float & height, const Alignment & alignment = Alignment::Centered);
-
+		/// <summary> Draws text to the screen. width will be calculated automatically from the height and number of characters </summary>
+		/// <param name="toDraw">The text to draw.</param>
+		/// <param name="x">The x position.</param>
+		/// <param name="y">The y position.</param>
+		/// <param name="height">The height.</param>
+		/// <param name="alignment">The alignment.</param>
 		void DrawText(const std::string & toDraw, const float & x, const float & y, const float & height, const Alignment & alignment = Alignment::Centered);
-		/// <summary>
-		/// Draws the texture to the screen.
-		/// </summary>
-		/// <param name="toDraw">To texture to draw.</param>
+		/// <summary> Draws s texture to the screen. </summary>
+		/// <param name="toDraw">The texture to draw.</param>
 		/// <param name="x">The x position.</param>
 		/// <param name="y">The y position.</param>
 		/// <param name="width">The width.</param>
@@ -75,24 +68,21 @@ namespace B00289996B00227422 {
 		void DrawTexture(const std::shared_ptr<Texture> & toDraw, const float & x, const float & y, const float & width, const float & height, const Alignment & alignment = Alignment::Centered);
 
 
+		/// <summary> Draws the provided FBO using either a (optional) provided shader, or the default hud shader. </summary>
+		/// <param name="toDraw">To FBO to be drawn.</param>
+		/// <param name="shader">(optional) The shader to draw with.</param>
 		void DrawFBO(const std::shared_ptr<Texture> & toDraw, std::shared_ptr<ShaderProgram> shader = std::shared_ptr<ShaderProgram>());
-		/// <summary>
-		/// Renders the HUD.
-		/// </summary>
+		/// <summary> Renders the HUD. </summary>
 		void Render();
-
-
+		/// <summary> Sets the default shader.</summary>
+		/// <param name="shader">The shader.</param>
 		void SetShader(std::shared_ptr<ShaderProgram> shader);
 	private:
-		/// <summary>
-		/// Prevents a default instance of the <see cref="HUD"/> class from being created.
-		/// </summary>
+		/// <summary> Prevents a default instance of the <see cref="HUD"/> class from being created. </summary>
 		HUD();
-		/// <summary>
-		/// Converts text to a texture.
-		/// </summary>
-		/// <param name="str">The string.</param>
-		/// <param name="textID">The texture identifier.</param>
+		/// <summary> Converts text to a texture. </summary>
+		/// <param name="str">The text.</param>
+		/// <param name="textID">The texture to draw to.</param>
 		/// <returns></returns>
 		std::shared_ptr<Texture>  textToTexture(const char * str, const std::shared_ptr<Texture> &  textID);
 		TTF_Font* font; // the font

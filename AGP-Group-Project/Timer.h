@@ -16,16 +16,13 @@ namespace B00289996B00227422 {
 		/// </summary>
 		/// <returns>the fixed time step</returns>
 		static const float GetFixedDeltaTime();
-		static const float GetRunTime();
+		/// <summary>Gets the total running time.</summary>
+		/// <returns>the total run time</returns>
 		static const float GetTime();
 	private:
-		/// <summary>
-		/// Updates the timer.
-		/// </summary>
+		/// <summary>Updates the timer.</summary>
 		static void Update();
-		/// <summary>
-		/// Initializes the timer.
-		/// </summary>
+		/// <summary>Initializes the timer.</summary>
 		static void Init();
 		static const float FIXED_DELTA_TIME;
 		static float deltaTime;

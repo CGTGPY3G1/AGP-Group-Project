@@ -6,9 +6,9 @@ layout (location = 3) in vec3 biTangent;
 layout (location = 4) in vec2 textureCoordinate;
 layout (location = 5) in vec4 colour;
 
-uniform mat4 modelview;
+uniform mat4 model;
 
 void main()
 {
-    gl_Position = modelview * vec4(position, 1.0);
+    gl_Position = model * vec4(position, 1.0);
 } 

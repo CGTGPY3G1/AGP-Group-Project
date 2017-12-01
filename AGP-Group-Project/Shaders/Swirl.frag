@@ -1,3 +1,6 @@
+// based on and adapted from http://www.geeks3d.com/20110428/shader-library-swirl-post-processing-filter-in-glsl/
+// much of the code is taken directly from the above link, the only change is that the time variable is actually used
+// in this version, where in the above link it is not
 #version 330 core
 out vec4 colour;
 in vec2 UV;

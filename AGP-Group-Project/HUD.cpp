@@ -115,14 +115,13 @@ namespace B00289996B00227422 {
 	}
 
 	void HUD::DrawFBO(const std::shared_ptr<Texture>& toDraw, std::shared_ptr<ShaderProgram> shader) {
+		// if a shader has been provided, use it, else, use the default shader
 		std::shared_ptr<ShaderProgram> drawShader = shader ? shader : this->shader;
-		if(drawShader) {
-			drawShader->Bind();
-			const static glm::mat4 transform(1.0f);
-			const float scaleX = ((float)toDraw->width / (float)Graphics::GetInstance().GetWindowWidth()), scaleY = ((float)toDraw->height / (float)Graphics::GetInstance().GetWindowHeight());
-			glm::vec3 scale = glm::vec3(scaleX, scaleY, 1.0f);
-			toDraw->Bind(drawShader);
-			drawShader->SetUniform("modelview", transform);
+		if(drawShader) { 
+			drawShader->Bind(); //bind the shader
+			const static glm::mat4 transform(1.0f); // a static identity matrix (will only be initialized once)
+			toDraw->Bind(drawShader); // bind the texture
+			drawShader->SetUniform("model", transform);
 			model->Render();
 		}
 	}
@@ -130,24 +129,24 @@ namespace B00289996B00227422 {
 	void HUD::Render() {
 		if(shader) {
 			shader->Bind();
-
-			glDisable(GL_DEPTH_TEST);//Disable depth test for HUD label
+			//Disable depth test and culling for HUD label
+			glDisable(GL_DEPTH_TEST);
 			glDisable(GL_CULL_FACE);
-			//glEnable(GL_BLEND);
 			
 			for(unsigned int i = 0; i < currentTextureIndex; i++) {
 				textureObjects[i].texture->Bind(shader);
-				shader->SetUniform("modelview", textureObjects[i].transform);
+				shader->SetUniform("model", textureObjects[i].transform);
 				model->Render();
 			}
 			currentTextureIndex = 0;
 			for (unsigned int i = 0; i < currentTextIndex; i++) {
 				textObjects[i].texture->Bind(shader);
-				shader->SetUniform("modelview", textObjects[i].transform);
+				shader->SetUniform("model", textObjects[i].transform);
 				model->Render();
 			}
 			currentTextIndex = 0;
 		}
+		//re-enable depth test and culling
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 		shader->UnBind();
@@ -155,7 +154,8 @@ namespace B00289996B00227422 {
 
 	void HUD::SetShader(std::shared_ptr<ShaderProgram> shader) {
 		this->shader = shader;
-		if(this->shader) this->shader->SetUniform("projection", glm::mat4(1.0f));
+		// set the viewprojection value of the shader to an identity matrix to prevent the need for reorientation and scaling
+		if(this->shader) this->shader->SetUniform("viewprojection", glm::mat4(1.0f)); 
 	}
 
 	std::shared_ptr<Texture> HUD::textToTexture(const char * str, const std::shared_ptr<Texture> & texture) {

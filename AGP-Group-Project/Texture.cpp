@@ -6,12 +6,12 @@ namespace B00289996B00227422 {
 	}
 	void Texture::Bind(std::shared_ptr<ShaderProgram> shader) {
 		if(type == TextureType::DIFFUSE) {
-			static GLuint boundTexture = 0;
+			static GLuint boundTexture = 0; // initialized only once, this is used to prevent the same texture being bound multiple times
 			glActiveTexture(GL_TEXTURE0);
 			if(id != boundTexture) {
 				boundTexture = id;
 				glBindTexture(GL_TEXTURE_2D, id);
-				shader->SetUniform("textureUnit0", 0);
+				shader->SetUniform("textureUnit0", 0); // update the shader uniform, in case it is not already set
 			}
 		}
 		else if(type == TextureType::NORMAL_MAP) {

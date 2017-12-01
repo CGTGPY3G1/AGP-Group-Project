@@ -33,10 +33,7 @@ namespace B00289996B00227422 {
 		void DrawOBB(const OBB & obb, const glm::vec3 &colour = glm::vec3(0.0f, 1.0f, 0.0f));
 
 		void drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color);
-
-		/// <summary>
-		/// Reports the error warning.
-		/// </summary>
+		/// <summary> Reports the error warning. </summary>
 		/// <param name="warningString">The warning string.</param>
 		void reportErrorWarning(const char *warningString);
 		/// <summary>
@@ -45,28 +42,18 @@ namespace B00289996B00227422 {
 		/// <param name="location">The location.</param>
 		/// <param name="textString">The text string.</param>
 		void draw3dText(const btVector3 &location, const char *textString) {}
-		/// <summary>
-		/// Sets the debug mode.
-		/// </summary>
+		/// <summary> Sets the debug mode. (unused) </summary>
 		/// <param name="debugMode">The debug mode.</param>
 		void setDebugMode(int debugMode);
-		/// <summary>
-		/// Gets the debug mode.
-		/// </summary>
+		/// <summary> Gets the debug mode. (unused)</summary>
 		/// <returns> the debug mode </returns>
 		int getDebugMode() const;
-		/// <summary>
-		/// Renders the cached data
-		/// </summary>
+		/// <summary>Renders the cached data</summary>
 		void Render();
-		/// <summary>
-		/// Flushes the cached data.
-		/// </summary>
+		/// <summary>Flushes the cached data.</summary>
 		void FlushLines();
 	private:
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DebugDraw"/> class.
-		/// </summary>
+		/// <summary>Initializes a new instance of the <see cref="DebugDraw"/> class. </summary>
 		DebugDraw();
 		void Init();
 		static unsigned int VAO, positionBuffer, colourBuffer;

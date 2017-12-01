@@ -11,13 +11,13 @@
 #include "Transform.h"
 #include "GameObject.h"
 namespace B00289996B00227422 {
-	
+	GLuint ParticleEmitter::VAO = 0, ParticleEmitter::VBO = 0, ParticleEmitter::IBO = 0;
 	ParticleEmitter::ParticleEmitter() {
 	}
 
 	ParticleEmitter::ParticleEmitter(std::weak_ptr<GameObject> gameObject) : ScriptableComponent(gameObject){
 		shader = FileLoader::GetInstance().LoadShader("Shaders//Particles.vert", "Shaders//Particles.frag");
-		Generate();
+		if(VAO == 0) Generate();
 	}
 
 	ParticleEmitter::~ParticleEmitter() {
@@ -150,7 +150,7 @@ namespace B00289996B00227422 {
 		std::shared_ptr<Camera> cam = Camera::GetMainCamera().lock();
 		glm::mat4 view = cam->GetView();
 
-		shader->SetUniform("viewprojection", cam->GetViewProjection());
+		shader->SetUniform("viewviewprojection", cam->GetViewProjection());
 		if(texture) texture->Bind(shader);
 		std::shared_ptr<Transform> camTransform = cam->GetComponent<Transform>().lock();
 		glm::mat4 transform = GetComponent<Transform>().lock()->GetWorldTransform();
@@ -219,11 +219,11 @@ namespace B00289996B00227422 {
 		angularVelocity = angle; angularAxis = axis;
 	}
 
-	const float Particle::GetAngularVelocity() const {
+	const float Particle::GetAngle() const {
 		return angularVelocity;
 	}
 
-	const glm::vec3 Particle::GetAngularAxis() const {
+	const glm::vec3 Particle::GetAxis() const {
 		return angularAxis;
 	}
 

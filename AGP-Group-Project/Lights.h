@@ -5,6 +5,9 @@
 #include <glm\vec4.hpp>
 #include <GL\glew.h>
 namespace B00289996B00227422 {
+	/// <summary>
+	/// Abstraction used to store/access derived lights
+	/// </summary>
 	struct BaseLight {
 		glm::vec3 position;
 		glm::vec3 diffuse = glm::vec3(1.0f, 1.0f, 1.0f);

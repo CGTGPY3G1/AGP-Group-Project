@@ -12,10 +12,9 @@ namespace B00289996B00227422 {
 	}
 
 	void AutoRotator::Update(const float & deltaTime) {
+		// if the object has a transform component, rotate it by the alpha value around the axis
 		std::shared_ptr<Transform> transform = GetComponent<Transform>().lock();
-		if(transform) {
-			transform->Rotate(axis, alpha * deltaTime);
-		}
+		if(transform) transform->Rotate(axis, alpha * deltaTime);
 	}
 
 	void AutoRotator::SetValues(const glm::vec3 & axis, const float & alpha) {

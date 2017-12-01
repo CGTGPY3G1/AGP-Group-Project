@@ -14,6 +14,7 @@ namespace B00289996B00227422 {
 	class FrameBuffer;
 	class DepthBuffer;
 	class CubicDepthBuffer;
+
 	class RenderingSystem : public System {
 	public:
 
@@ -24,7 +25,7 @@ namespace B00289996B00227422 {
 		/// <summary> Stores all relevant gameobjects and components to be processed further.  performs basic culling operations </summary>
 		/// <param name="gameObjects">The game objects.</param>
 		void ProcessComponents(std::vector<std::shared_ptr<GameObject>> & gameObjects) override;
-		/// <summary> Gets the component mask. </summary>
+		/// <summary> Gets the component mask used to determine which compoents are use by the rendering system. </summary>
 		/// <returns>the component mask</returns>
 		const unsigned int GetComponentMask() const override;
 		/// <summary> Sets the main shader. </summary>
@@ -107,8 +108,10 @@ namespace B00289996B00227422 {
 		std::shared_ptr<FrameBuffer> frameBuffer;
 		std::shared_ptr<FrameBuffer> tempBuffers[2];
 		const static int MAX_LIGHTS = 5;
+		// toggles effects
 		bool wave, bloom, swirl, blur, shadow, collisionType, normalMapping;
 		float waveTimer, swirlTimer;
+		unsigned int screenWidth, screenHeight;
 	};
 }
 #endif // !B00289996B00227422_RENDERING_SYSTEM_H

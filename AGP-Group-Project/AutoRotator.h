@@ -10,7 +10,7 @@ namespace B00289996B00227422 {
 		/// <summary> Initializes a new instance of the <see cref="AutoRotator"/> class. </summary>
 		AutoRotator();
 		/// <summary> Initializes a new instance of the <see cref="AutoRotator"/> class. </summary>
-		/// <param name="gameObject">The owning game object.</param>
+		/// <param name="gameObject">The game object this component is attached to.</param>
 		AutoRotator(std::weak_ptr<GameObject> gameObject);
 		/// <summary> Finalizes an instance of the <see cref="AutoRotator"/> class. </summary>
 		~AutoRotator();

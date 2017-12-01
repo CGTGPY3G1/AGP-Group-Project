@@ -9,6 +9,7 @@ namespace B00289996B00227422 {
 	unsigned int DebugDraw::VAO = 0, DebugDraw::positionBuffer = 0, DebugDraw::colourBuffer = 0;
 
 	DebugDraw::DebugDraw() {
+		glLineWidth(2);
 		shader = FileLoader::GetInstance().LoadShader("Shaders\\basic.vert", "Shaders\\basic.frag");
 	}
 
@@ -145,8 +146,8 @@ namespace B00289996B00227422 {
 				if (cam) {
 
 					shader->Bind();
-					// update the shader projection transform using the cameras ViewProjection Transform
-					shader->SetUniform("projection", cam->GetViewProjection());
+					// update the shader viewprojection transform using the cameras ViewProjection Transform
+					shader->SetUniform("viewprojection", cam->GetViewProjection());
 					if (VAO == 0) Init();
 
 					glBindVertexArray(VAO);

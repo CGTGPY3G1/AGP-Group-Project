@@ -6,6 +6,7 @@
 #include <memory>
 #include "Shader.h"
 namespace B00289996B00227422 {
+	/// <summary>Texture Types</summary>
 	enum TextureType : unsigned int {
 		DIFFUSE = 0,
 		NORMAL_MAP = 1,
@@ -19,10 +20,14 @@ namespace B00289996B00227422 {
 		GLuint id;
 		~Texture();
 		unsigned int width = 1, height = 1;
+		/// <summary>Binds the texture to the provided shader</summary>
+		/// <param name="shader">The shader.</param>
 		void Bind(std::shared_ptr<ShaderProgram> shader);
+		/// <summary>Unbind the texture</summary>
 		void UnBind();
 	};
 
+	/// <summary>Used to find texture of a certain type in a collection</summary>
 	struct TextureIsType {
 		TextureIsType(const TextureType & type) : t(type) {}
 		bool operator()(std::shared_ptr<Texture> l) { return l->type == t; }

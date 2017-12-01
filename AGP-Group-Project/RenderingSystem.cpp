@@ -23,22 +23,27 @@
 #include <glm\gtc\matrix_inverse.hpp>
 namespace B00289996B00227422 {
 	RenderingSystem::RenderingSystem() : wave(false), bloom(false), swirl(false), shadow(false), swirlTimer(0.0f), waveTimer(0.0f), collisionType(0) {
+		// create depth buffers
 		depthBuffer = std::make_shared<DepthBuffer>();
-		depthShader = FileLoader::GetInstance().LoadShader("Shaders//DepthBuffer.vert", "Shaders//DepthBuffer.frag");
+		
 		for(size_t i = 0; i < MAX_LIGHTS; i++) {
 			cubicDepthBuffers.push_back(std::make_shared<CubicDepthBuffer>());
 		}
+		// create frame buffers
+		frameBuffer = std::make_shared<FrameBuffer>();
+		for (size_t i = 0; i < 2; i++) {
+			tempBuffers[i] = std::make_shared<FrameBuffer>();
+		}
+		// load shaders
+		depthShader = FileLoader::GetInstance().LoadShader("Shaders//DepthBuffer.vert", "Shaders//DepthBuffer.frag");
 		cubicDepthShader = FileLoader::GetInstance().LoadShader("Shaders//PointDepthBuffer.vert", "Shaders//PointDepthBuffer.frag", "Shaders//PointDepthBuffer.geom");
 		brightShader = FileLoader::GetInstance().LoadShader("Shaders//BrightnessLimit.vert", "Shaders//BrightnessLimit.frag");
 		gaussianBlur = FileLoader::GetInstance().LoadShader("Shaders//GaussianBlur.vert", "Shaders//GaussianBlur.frag");
 		staticWave = FileLoader::GetInstance().LoadShader("Shaders//StaticWave.vert", "Shaders//StaticWave.frag");
 		blendShader = FileLoader::GetInstance().LoadShader("Shaders//Blend.vert", "Shaders//Blend.frag");
 		swirlShader = FileLoader::GetInstance().LoadShader("Shaders//Swirl.vert", "Shaders//Swirl.frag");
-		frameBuffer = std::make_shared<FrameBuffer>();
-		for(size_t i = 0; i < 2; i++) {
-			tempBuffers[i] = std::make_shared<FrameBuffer>();
-		}
-		glLineWidth(2);
+		// set the initial screen size
+		screenWidth = Graphics::GetInstance().GetWindowWidth(), screenHeight = Graphics::GetInstance().GetWindowHeight();
 	}
 
 	unsigned int maxRenderables = 0;
@@ -46,20 +51,22 @@ namespace B00289996B00227422 {
 
 	void RenderingSystem::ProcessComponents(std::vector<std::shared_ptr<GameObject>>& gameObjects) {
 		ClearData();
+		// point light count
 		pCount = 0;
 		for(size_t i = 0; i < gameObjects.size(); i++) {
+			// store all object/components relative to the rendering process
 			std::shared_ptr<GameObject> gameObject = gameObjects[i];
 			if(!gameObject || !gameObject->GetEnabled()) continue;
-			if(gameObject->HasComponents(COMPONENT_CAMERA)) cameraObject = gameObject;
+			if(gameObject->HasComponents(COMPONENT_CAMERA)) cameraObject = gameObject;// only 1 camera is allowed
 			if(gameObject->HasComponents(COMPONENT_MESH_RENDERER)) {
-				allRenderables.push_back(gameObject);
+				allRenderables.push_back(gameObject); // all renderables, used for depth mapping
 			}
 			if(gameObject->HasComponents(COMPONENT_PARTICLE_EMITTER)) particleEmitters.push_back(gameObject->GetComponent<ParticleEmitter>().lock());
 			if(gameObject->HasComponents(COMPONENT_LIGHT)) {
 				std::shared_ptr<Light> light = gameObject->GetComponent<Light>().lock();
-				std::shared_ptr<Transform> transform = gameObject->GetComponent<Transform>().lock();
-				if(light) {
-					LightType type = light->GetLightType();
+				if(light) { //if the light component has a light attached to it
+					std::shared_ptr<Transform> transform = gameObject->GetComponent<Transform>().lock();
+					LightType type = light->GetLightType(); // get its type (directional/point)
 					switch(type) {
 					case LightType::DIRECTION_LIGHT:
 						directionLightObject = gameObject;
@@ -68,19 +75,20 @@ namespace B00289996B00227422 {
 						directionLight->direction = transform->GetForward();
 						break;
 					case LightType::POINT_LIGHT:
-					{
+					{// if it is a point light
 						std::shared_ptr<Camera> cam = cameraObject->GetComponent<Camera>().lock();
-						if (cam) {
-							std::shared_ptr<PointLight> pointLight = light->GetLight<PointLight>();
+						if (cam) {// and a camera has been registered
 							
+							std::shared_ptr<PointLight> pointLight = light->GetLight<PointLight>();
 							Frustum frustum = cam->GetFrustum();
+							// calculate the lights bounds
 							const glm::vec3 pos = transform->GetPosition();
 							Sphere sphere = Sphere(pos, pointLight->lightLength);
+							// add any lights that are in the cameras view to the array
 							if (frustum.CheckSphere(sphere, collisionType)) {
 								pointLight->position = pos;
 								pointLights.push_back(pointLight);
 								pCount++;
-
 							}
 						}
 						
@@ -99,26 +107,21 @@ namespace B00289996B00227422 {
 				std::shared_ptr<Camera> cam = cameraObject->GetComponent<Camera>().lock();
 				if (cam) {
 					Frustum frustum = cam->GetFrustum();
+					// check all renderable objects against the cameras frustum
 					for (std::vector<std::shared_ptr<GameObject>>::iterator i = allRenderables.begin(); i != allRenderables.end(); ++i) {
 						std::shared_ptr<GameObject> gameObject = (*i);
 						std::shared_ptr<Transform> transform = gameObject->GetComponent<Transform>().lock();
 						std::shared_ptr<MeshRenderer> meshRenderer = gameObject->GetComponent<MeshRenderer>().lock();
 						OBB obb = transform->TransformOBB(meshRenderer->GetAABB());
-						
 						Sphere sphere = transform->TransformSphere(Sphere(glm::vec3(0.0f), meshRenderer->GetRadius()));
 						if (frustum.CheckOBB(obb, collisionType)) {
 							count++;
-							renderables.push_back(*i);
-						//	DebugDraw::GetInstance().DrawOBB(obb, glm::vec3(1.0f, 0.0f, 0.0f));
+							renderables.push_back(*i); // adding any that are visible to the renderable list
 						}
-
 					}
 				}
-				
 			}
-			
 		}
-		
 	}
 
 	const unsigned int RenderingSystem::GetComponentMask() const {
@@ -130,6 +133,7 @@ namespace B00289996B00227422 {
 	}
 
 	void RenderingSystem::UpdateTimers(const float deltaTime) {
+		//update the timees by 2 * (the frame time)
 		if(wave) waveTimer += deltaTime * 2.0f;
 		if(swirl) swirlTimer += deltaTime * 2.0f;
 	}
@@ -159,39 +163,48 @@ namespace B00289996B00227422 {
 
 	void RenderingSystem::UpdateCameraUniforms() {
 		std::shared_ptr<Camera> cam = cameraObject->GetComponent<Camera>().lock();
-		shader->SetUniform("projection", cameraObject->GetComponent<Camera>().lock()->GetViewProjection());
+		shader->SetUniform("viewprojection", cameraObject->GetComponent<Camera>().lock()->GetViewProjection());
 		std::shared_ptr<Transform> camTransform = cameraObject->GetComponent<Transform>().lock();
 		shader->SetUniform("viewPosition", camTransform->GetPosition());
 		glViewport(0, 0, (Graphics::GetInstance().GetWindowWidth()), (Graphics::GetInstance().GetWindowHeight()));
 	}
 
 	void RenderingSystem::ClearData() {
+		// clear all data (except for the camera)
 		particleEmitters.clear();
 		pointLights.clear();
 		spotLights.clear();
-		if(directionLight) directionLight = std::shared_ptr<DirectionLight>();
+		directionLight = std::shared_ptr<DirectionLight>();
 		directionLightObject = std::shared_ptr<GameObject>();
 		renderables.clear();
 		allRenderables.clear();
 	}
 
 	void RenderingSystem::ResizeBuffers() {
+		
 		unsigned int w = Graphics::GetInstance().GetWindowWidth(), h = Graphics::GetInstance().GetWindowHeight();
-		if(frameBuffer) {
-			if(frameBuffer->GetWidth() != w || frameBuffer->GetHeight() != h) {
-				frameBuffer = std::make_shared<FrameBuffer>(w, h);
-				tempBuffers[0] = std::make_shared<FrameBuffer>(w, h);
-				tempBuffers[1] = std::make_shared<FrameBuffer>(w, h);
+		if (w != screenWidth || h != screenHeight) { // if the screen size has changed since the last frame
+			if (frameBuffer) {
+				if (frameBuffer->GetWidth() != w || frameBuffer->GetHeight() != h) {// and the frame buffer isn't the correct size
+					// resize the frame buffer to the windows size
+					frameBuffer = std::make_shared<FrameBuffer>(w, h);
+					tempBuffers[0] = std::make_shared<FrameBuffer>(w, h);
+					tempBuffers[1] = std::make_shared<FrameBuffer>(w, h);
+				}
 			}
+			screenWidth = w; screenHeight = h;
 		}
 	}
 
 	void RenderingSystem::RenderScene() {
 		ResizeBuffers();
+		// clear the screen
 		Graphics::GetInstance().Clear();
+		// create depth maps to (potentially be used during rendering)
 		std::vector<std::shared_ptr<Texture>> cubeMapTextures;
 		std::shared_ptr<Texture> depthTexture;
 		if (shadow) {
+			//based on https://learnopengl.com/#!Advanced-Lighting/Shadows/Shadow-Mapping
 			float near = 1.0f, far = 100.0f, halfWidth = 8.0f, halfHeight = 6.0f;
 			glm::mat4 lightProjection = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, near, far);
 			glm::mat4 lightView = glm::lookAt(directionLight->position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -207,15 +220,14 @@ namespace B00289996B00227422 {
 			glViewport(0, 0, shadowWidth, shadowHeight);
 			depthBuffer->Bind();
 			Graphics::GetInstance().Clear();
-
+			// render the whole scene to a depth buffer
 			if (directionLightObject) {
 				for (std::vector<std::shared_ptr<GameObject>>::iterator i = allRenderables.begin(); i != allRenderables.end(); ++i) {
 					std::shared_ptr<GameObject> gameObject = (*i);
-
 					std::shared_ptr<MeshRenderer> meshRenderer = gameObject->GetComponent<MeshRenderer>().lock();
 					std::vector<std::shared_ptr<Mesh>> meshes = meshRenderer->GetMeshes();
 					std::shared_ptr<Transform> transform = gameObject->GetComponent<Transform>().lock();
-					depthShader->SetUniform("modelview", transform->GetWorldTransform());
+					depthShader->SetUniform("model", transform->GetWorldTransform());
 					for (std::vector<std::shared_ptr<Mesh>>::iterator i = meshes.begin(); i != meshes.end(); ++i) {
 						GLuint VAO = (*i)->GetVAO();
 						if (VAO) {
@@ -234,8 +246,9 @@ namespace B00289996B00227422 {
 			depthTexture = depthBuffer->GetTexture();
 
 			cubeMapTextures = std::vector<std::shared_ptr<Texture>>();
+			//based on https://learnopengl.com/#!Advanced-Lighting/Shadows/Point-Shadows
 			if (pointLights.size() > 0) {
-
+				
 				float aspect = 1.0f;
 				near = 0.0f;
 				// directions for orienting shadow transform matrices
@@ -254,27 +267,23 @@ namespace B00289996B00227422 {
 					shadowWidth = (cubicDepthBuffers[i]->GetWidth() + 0.01f), shadowHeight = GLsizei(cubicDepthBuffers[i]->GetHeight() + 0.01f);
 					glViewport(0, 0, shadowWidth, shadowHeight);
 					Graphics::GetInstance().Clear();
-					std::vector<glm::mat4> shadowTransforms;
+					// calculate cubemap viewprojections
 					glm::vec3 position = pointLights[i]->position;
-					shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + right, down));
-					shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + left, down));
-					shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + up, forward));
-					shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + down, back));
-					shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + forward, down));
-					shadowTransforms.push_back(shadowProjection * glm::lookAt(position, position + back, down));
-
-
-					cubicDepthShader->SetUniform("far", far);
-					for (int j = 0; j < shadowTransforms.size(); j++) {
-						cubicDepthShader->SetUniform(("lightMatrices[" + std::to_string(j) + "]").c_str(), shadowTransforms[j]);
-					}
-					cubicDepthShader->SetUniform("lightPosition", position);
+					cubicDepthShader->SetUniform("lightMatrices[0]", shadowProjection * glm::lookAt(position, position + right, down));
+					cubicDepthShader->SetUniform("lightMatrices[1]", shadowProjection * glm::lookAt(position, position + left, down));
+					cubicDepthShader->SetUniform("lightMatrices[2]", shadowProjection * glm::lookAt(position, position + up, forward));
+					cubicDepthShader->SetUniform("lightMatrices[3]", shadowProjection * glm::lookAt(position, position + down, back));
+					cubicDepthShader->SetUniform("lightMatrices[4]", shadowProjection * glm::lookAt(position, position + forward, down));
+					cubicDepthShader->SetUniform("lightMatrices[5]", shadowProjection * glm::lookAt(position, position + back, down));
+					cubicDepthShader->SetUniform("far", far); // set the lights far value
+					cubicDepthShader->SetUniform("lightPosition", position); // and its position
+					// render the entire scene
 					for (std::vector<std::shared_ptr<GameObject>>::iterator i = allRenderables.begin(); i != allRenderables.end(); ++i) {
 						std::shared_ptr<GameObject> gameObject = (*i);
 						std::shared_ptr<MeshRenderer> meshRenderer = gameObject->GetComponent<MeshRenderer>().lock();
 						std::vector<std::shared_ptr<Mesh>> meshes = meshRenderer->GetMeshes();
 						std::shared_ptr<Transform> transform = gameObject->GetComponent<Transform>().lock();
-						cubicDepthShader->SetUniform("modelview", transform->GetWorldTransform());
+						cubicDepthShader->SetUniform("model", transform->GetWorldTransform());
 						for (std::vector<std::shared_ptr<Mesh>>::iterator i = meshes.begin(); i != meshes.end(); ++i) {
 							GLuint VAO = (*i)->GetVAO();
 							if (VAO) {
@@ -290,17 +299,22 @@ namespace B00289996B00227422 {
 				cubicDepthShader->UnBind();
 			}
 			shader->Bind();
-			shader->SetUniform("lightSpace", shadowMatrix);
-			shader->SetUniform("far", far);			
+			shader->SetUniform("lightSpace", shadowMatrix);		
 		}
-		else {
-			shader->Bind();
-		}
+		shader->Bind();
+		// fill all available cubmao slots in the shader
 		for (int i = 0; i < MAX_LIGHTS; i++) {
 			shader->SetUniform<int>(("cubeMap" + std::to_string(i)).c_str(), (3 + i));
 			glActiveTexture(GL_TEXTURE3 + i);
+			// if there is a visible light to use, use it
 			if (shadow && i < pointLights.size()) glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextures[i]->id);
-			else glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+			else glBindTexture(GL_TEXTURE_CUBE_MAP, 0); // mark it as empty
+		}
+		// if shadows are enabled bind the Shadows Depth map
+		if (shadow) {
+			glActiveTexture(GL_TEXTURE2);
+			glBindTexture(GL_TEXTURE_2D, depthTexture->id);
+			shader->SetUniform("textureUnit2", 2);
 		}
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
@@ -312,59 +326,54 @@ namespace B00289996B00227422 {
 		frameBuffer->Bind();
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		std::sort(renderables.begin(), renderables.end(), [](const std::shared_ptr<GameObject>& l, const std::shared_ptr<GameObject>& r) {
-			if(l && r) {
-				std::shared_ptr<MeshRenderer> lRenderer = l->GetComponent<MeshRenderer>().lock(), rRenderer = r->GetComponent<MeshRenderer>().lock();
-				std::shared_ptr<Material> lMaterial = lRenderer->GetMaterial(), rMaterial = rRenderer->GetMaterial();
-				return lMaterial->GetDiffuse().w > rMaterial->GetDiffuse().w;
-			}
-			return false;
-		});
+		
 		glm::mat4 view = cameraObject->GetComponent<Camera>().lock()->GetView();
+		// used to prevent VAOs being unnecessarily re-bound
+		GLuint currentVAO = 0;
+		// render all objects
 		for(std::vector<std::shared_ptr<GameObject>>::iterator i = renderables.begin(); i != renderables.end(); ++i) {
 			std::shared_ptr<GameObject> gameObject = (*i);
+
 			std::shared_ptr<MeshRenderer> meshRenderer = gameObject->GetComponent<MeshRenderer>().lock();
 			std::vector<std::shared_ptr<Mesh>> meshes = meshRenderer->GetMeshes();
-
 			std::shared_ptr<Transform> transform = gameObject->GetComponent<Transform>().lock();
-			shader->SetUniform("modelview", transform->GetWorldTransform());
+			shader->SetUniform("model", transform->GetWorldTransform());
 			shader->SetUniform("normalMatrix", transform->GetNormalMatrix());
 			std::shared_ptr<Material> material = meshRenderer->GetMaterial();
-			if(shadow) material->ReplaceTexture(TextureType::DEPTH_MAP, depthTexture);
 			material->Bind();
-			const bool TRANSPARENT = material->GetDiffuse().w < 0.9999f;
-			if(TRANSPARENT) glDepthMask(GL_FALSE);
-			for(std::vector<std::shared_ptr<Mesh>>::iterator i = meshes.begin(); i != meshes.end(); ++i) {
-				GLuint VAO = (*i)->GetVAO();
-				if(VAO) {
-					glBindVertexArray(VAO);
-					glDrawElements(GL_TRIANGLES, (*i)->GetIndexCount(), GL_UNSIGNED_INT, 0);
+			for(std::vector<std::shared_ptr<Mesh>>::iterator j = meshes.begin(); j != meshes.end(); ++j) {
+				GLuint VAO = (*j)->GetVAO();
+				if (VAO != currentVAO) currentVAO = VAO;
+				if (currentVAO) {
+					glBindVertexArray(currentVAO);
+					glDrawElements(GL_TRIANGLES, (*j)->GetIndexCount(), GL_UNSIGNED_INT, 0);
 					glBindVertexArray(0);
 				}
 			}
-			if(TRANSPARENT) glDepthMask(GL_TRUE);
 		}
-
+		// render all particle systems
 		for(std::vector<std::shared_ptr<ParticleEmitter>>::iterator i = particleEmitters.begin(); i != particleEmitters.end(); ++i) {
 			(*i)->Render();
 		}
-
+		// try to draw debug shapes, will do nothing if debud drawing is disabled
 		PhysicsSystem::GetInstance().Draw();
 
 		frameBuffer->Unbind();
+		// begin post-processing
 		std::shared_ptr <FrameBuffer> readBuffer = frameBuffer, drawBuffer = tempBuffers[0];
-		if(bloom) {
+		if(bloom) {// based on https://learnopengl.com/#!Advanced-Lighting/Bloom
+			// render the content of the frame buffer to a new frame buffer, only retaining pixels 
+			// whose colour is higher than a predefined threshold
 			brightShader->Bind();
 			drawBuffer->Bind();
 			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			HUD::GetInstance().DrawFBO(readBuffer->GetTexture(), brightShader);
-			HUD::GetInstance().Render();
+
 			drawBuffer->Unbind();
+			// use 2 temorary buffers to repeatedly blur the resulting image
 			readBuffer = tempBuffers[0];
 			drawBuffer = tempBuffers[1];
-
 			for(size_t i = 0; i < 5; i++) {
 				drawBuffer->Bind();
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -373,6 +382,7 @@ namespace B00289996B00227422 {
 			}
 
 			drawBuffer->Bind();
+			// finally, blend the relust with the original image (of the entire visible scene)
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			blendShader->Bind();
 			glActiveTexture(GL_TEXTURE1);
@@ -381,7 +391,7 @@ namespace B00289996B00227422 {
 			HUD::GetInstance().DrawFBO(frameBuffer->GetTexture(), blendShader);
 			SwapFrameBuffers(drawBuffer, readBuffer);
 		}
-		if(wave) {
+		if(wave) {// based on https://en.wikibooks.org/wiki/OpenGL_Programming/Post-Processing#A_first_effect
 			drawBuffer->Bind();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			staticWave->SetUniform("offset", waveTimer);
@@ -391,7 +401,7 @@ namespace B00289996B00227422 {
 			SwapFrameBuffers(drawBuffer, readBuffer);
 		}
 		
-		if(swirl) {
+		if(swirl) { // based on http://www.geeks3d.com/20110428/shader-library-swirl-post-processing-filter-in-glsl/
 			drawBuffer->Bind();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			staticWave->Bind();
@@ -402,17 +412,16 @@ namespace B00289996B00227422 {
 			if(readBuffer == frameBuffer) readBuffer = tempBuffers[1];
 			SwapFrameBuffers(drawBuffer, readBuffer);
 		}
-		
+		// draw to OpenGLs default frame buffer
 		frameBuffer->Unbind();
 		glViewport(0, 0, (Graphics::GetInstance().GetWindowWidth()), (Graphics::GetInstance().GetWindowHeight()));
-		
+		// draw the last buffer that was  written to
 		HUD::GetInstance().DrawFBO(readBuffer->GetTexture());
+		// HUD text overlay.  Draws number of objects culled, number of point lights used and the number of Frames Per Second
 		HUD::GetInstance().DrawText("Culled = " + std::to_string(maxRenderables - count) + "/" + std::to_string(maxRenderables), -0.9f, 0.85f, 0.05f, Alignment::Left);
 		if(pointLights.size() > 0) HUD::GetInstance().DrawText("Used Lights = " + std::to_string(pCount), -0.9f, 0.78f, 0.05f, Alignment::Left);
 		HUD::GetInstance().DrawText( std::to_string(Engine::GetInstance().GetFPS()) + " FPS", 0.9f, 0.85f, 0.05f, Alignment::Right);
-		
 
-		
 		HUD::GetInstance().Render();
 		
 	}

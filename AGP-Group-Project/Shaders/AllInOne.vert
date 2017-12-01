@@ -10,8 +10,8 @@ const int MAX_POINT_LIGHTS = 5;
 
 uniform int numberOfSpotLights;
 uniform int numberOfPointLights;
-uniform mat4 modelview;
-uniform mat4 projection;
+uniform mat4 model;
+uniform mat4 viewprojection;
 uniform mat4 lightSpace;
 uniform mat3 normalMatrix;
 
@@ -32,15 +32,15 @@ out ShaderValues {
 void main(void) {
 	
 	outValues.textureCoordinate = textureCoordinate;
-	vec3 n = normalize(vec3(modelview * vec4(normal, 0.0)));
-	vec3 t = normalize(vec3(modelview * vec4(tangent, 0.0)));
-	vec3 bt = normalize(vec3(modelview * vec4(biTangent, 0.0)));
+	vec3 n = normalize(vec3(model * vec4(normal, 0.0)));
+	vec3 t = normalize(vec3(model * vec4(tangent, 0.0)));
+	vec3 bt = normalize(vec3(model * vec4(biTangent, 0.0)));
 	outValues.tangentSpaceMatrix = mat3(t, bt, n);
 	outValues.normal = normal;
-	outValues.position = vec3(modelview * vec4(position, 1.0));
+	outValues.position = vec3(model * vec4(position, 1.0));
 	outValues.viewPosition = viewPosition;
 	outValues.viewDirection = normalize(outValues.viewPosition - outValues.position);
 	outValues.directionLightDirection = normalize(-directionLightDirection);
-	outValues.lightSpacePosition = lightSpace * (modelview * vec4(position, 1.0));
-	gl_Position = projection * modelview * vec4(position, 1.0);
+	outValues.lightSpacePosition = lightSpace * (model * vec4(position, 1.0));
+	gl_Position = viewprojection * model * vec4(position, 1.0);
 }

@@ -1,7 +1,7 @@
 #pragma once
 #ifndef B00289996B00227422_UTILITY_H
 #define B00289996B00227422_UTILITY_H
-
+// vertex layout locations
 #define VERTEX_POSITION		0
 #define VERTEX_NORMAL		1
 #define VERTEX_TANGENT		2
@@ -14,6 +14,9 @@
 class OpenGLUtility {
 public:
 	~OpenGLUtility() {}
+	/// <summary>Gets the value string 0f the supplied GLenum.</summary>
+	/// <param name="val">The enum value.</param>
+	/// <returns></returns>
 	static std::string GetValueString(GLenum val);
 private:
 
