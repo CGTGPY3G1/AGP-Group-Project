@@ -7,7 +7,8 @@ Frustum Culling
 Normal Mapping  
 Lighting (Point and Directional)
 Shadow Mapping (for both lighting types)  
-Editable Partical System wich allows for many effects to be produced  
+Editable Partical System wich allows for many effects to be produced (like the camp fire below)  
+  
 ![Alt text](/Screenshots/AllLightsandShadows.png?raw=true)  
 Bloom  
 ![Alt text](/Screenshots/Bloom.png?raw=true)  
