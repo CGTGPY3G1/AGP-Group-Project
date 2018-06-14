@@ -2,10 +2,10 @@
 Project submission for Part 2 of the Advanced Games Programming module at the University of the West of Scotland.
 
 # Features  
-Integrated Physics Engine (Bullet Physics)
+Integrated Physics Engine (using Bullet Physics)  
 Frustum Culling  
 Normal Mapping  
-Lighting (Point and Directional)
+Lighting (Point and Directional)  
 Shadow Mapping (for both lighting types)  
 Editable Partical System wich allows for many effects to be produced (like the camp fire below)  
   
