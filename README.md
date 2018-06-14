@@ -2,6 +2,7 @@
 Project submission for Part 2 of the Advanced Games Programming module at the University of the West of Scotland.
 
 # Features
+Integrated Physics Engine (Bullet Physics)
 Frustum Culling  
 Normal Mapping  
 Lighting (Point and Directional)
