@@ -29,9 +29,9 @@ C	- Toggle cursor
 F	- Toggle full-screen  
 I	- Toggle debug draw  
 T	- Switches frustum culling type (full enclosure or simple intersection)  
-W/UP ARROW - Adds forwards momentum to sphere  
-A/LEFT ARROW - Adds left moving momentum to sphere  
-S/DOWN ARROW - Adds backwards momentum to sphere  
-D/RIGHT ARROW	- Adds right moving momentum to sphere  
-RETURN - Pause application in current state  
+W/UP ARROW - Push globe forward  
+A/LEFT ARROW - Push globe left  
+S/DOWN ARROW - Push globe back  
+D/RIGHT ARROW	- Push globe right  
+RETURN - Pause application  
 ESCAPE - Exit application  
