@@ -2,6 +2,7 @@
 Project submission for Part 2 of the Advanced Games Programming module at the University of the West of Scotland.  
 Requires visual Studio 2017.  
 All dependancies are included and pre-built though the solution may have to be retargeted (depending on your windows version).  
+Video Demo https://www.youtube.com/watch?v=dAR1Ctlv6Sg  
 # Features  
 Integrated Physics Engine (using Bullet Physics)  
 Frustum Culling  
