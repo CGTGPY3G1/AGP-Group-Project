@@ -86,7 +86,7 @@ namespace B00289996B00227422 {
 		}
 	}
 
-	const std::shared_ptr<Texture>& Material::GetTexture(const unsigned int & index) const {
+	const std::shared_ptr<Texture> Material::GetTexture(const unsigned int & index) const {
 		return index < textures.size() ? textures[index] : std::shared_ptr<Texture>();
 	}
 

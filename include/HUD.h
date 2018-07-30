@@ -2,7 +2,7 @@
 
 #ifndef B00289996B00227422_HUD_H
 #define B00289996B00227422_HUD_H
-#include <SDL_ttf.h>
+#include <SDL_ttf/SDL_ttf.h>
 #include <GL/glew.h>
 #include <vector>
 #include <memory>

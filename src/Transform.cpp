@@ -285,7 +285,7 @@ namespace B00289996B00227422 {
 	}
 
 	void Transform::getWorldTransform(btTransform & worldTrans) {
-		UpdateTransform();
+		if (dirty) UpdateTransform();
 		worldTrans.setOrigin(TypeConverter::ConvertToBulletVector3(worldPosition));
 		worldTrans.setRotation(TypeConverter::ConvertToBulletQuat(worldRotation));
 	}
