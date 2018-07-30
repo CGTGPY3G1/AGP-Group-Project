@@ -7,9 +7,7 @@
 [submodule "external/assimp"]
 	path = external/assimp
 	url = https://github.com/assimp/assimp.git
-[submodule "external/Simple-OpenGL-Image-Library"]
-	path = external/Simple-OpenGL-Image-Library
-	url = https://github.com/kbranigan/Simple-OpenGL-Image-Library
+
 [submodule "external/glew-cmake"]
 	path = external/glew-cmake
 	url = https://github.com/Perlmint/glew-cmake.git
