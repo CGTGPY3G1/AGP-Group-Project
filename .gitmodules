@@ -8,6 +8,3 @@
 [submodule "external/glew-cmake"]
 	path = external/glew-cmake
 	url = https://github.com/Perlmint/glew-cmake.git
-[submodule "bullet3"]
-	path = bullet3
-	url = https://github.com/bulletphysics/bullet3.git
