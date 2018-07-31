@@ -8,9 +8,3 @@
 [submodule "external/glew-cmake"]
 	path = external/glew-cmake
 	url = https://github.com/Perlmint/glew-cmake.git
-[submodule "external/soil"]
-	path = external/soil
-	url = https://github.com/paralin/soil.git
-[submodule "external/SDL2-unofficial"]
-	path = external/SDL2-unofficial
-	url = https://github.com/CGTGPY3G1/SDL2-unofficial.git
