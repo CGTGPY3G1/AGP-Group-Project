@@ -1,9 +1,12 @@
 # AGP-Group-Project  
 Project submission for Part 2 of the Advanced Games Programming module at the University of the West of Scotland.  
-Requires visual Studio 2017.  
-All dependancies are included and pre-built though the solution may have to be retargeted (depending on your windows version).  
-Video Demo https://www.youtube.com/watch?v=dAR1Ctlv6Sg  
+#Building
+Clone the repo (including submodules)
+Build using cmake.
+or
+There is a pre-built Win32 version in the release section.
 # Features  
+Video Demo https://www.youtube.com/watch?v=dAR1Ctlv6Sg   
 Integrated Physics Engine (using Bullet Physics)  
 Frustum Culling  
 Normal Mapping  
