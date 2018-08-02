@@ -1,10 +1,10 @@
 # AGP-Group-Project  
 Project submission for Part 2 of the Advanced Games Programming module at the University of the West of Scotland.  
-#Building
-Clone the repo (including submodules)
-Build using cmake.
-or
-There is a pre-built Win32 version in the release section.
+# Building
+Clone the repo (including submodules)  
+Build using cmake.  
+or  
+There is a pre-built Win32 version in the release section.  
 # Features  
 Video Demo https://www.youtube.com/watch?v=dAR1Ctlv6Sg   
 Integrated Physics Engine (using Bullet Physics)  
