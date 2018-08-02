@@ -11,6 +11,6 @@
 [submodule "external/SDL2-unofficial"]
 	path = external/SDL2-unofficial
 	url = https://github.com/CGTGPY3G1/SDL2-unofficial
-[submodule "external/bullet3"]
-	path = external/bullet3
+[submodule "bullet3"]
+	path = bullet3
 	url = https://github.com/CGTGPY3G1/bullet3.git
