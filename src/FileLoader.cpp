@@ -7,7 +7,8 @@
 #include <assimp\Importer.hpp>
 #include <assimp\postprocess.h>
 #include <assimp\scene.h>
-#include <soil.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 #include <iostream>
 
 namespace B00289996B00227422 {
@@ -104,9 +105,9 @@ namespace B00289996B00227422 {
 			glGenTextures(1, &id);
 			if (id != GL_FALSE) {
 				glBindTexture(GL_TEXTURE_2D, id);
-				int width, height;
+				int width, height, channels;
 				// have soil load the image data
-				unsigned char * imageData = SOIL_load_image(filePath.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
+				unsigned char * imageData = stbi_load(filePath.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 				if (imageData == nullptr) { // if the image data was not loaded
 					// print an error and return an empty shared pointer
 					std::cout << "Error loading image from " << filePath << std::endl;
@@ -115,7 +116,7 @@ namespace B00289996B00227422 {
 				// populate the generated texure with the image data
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
 				// delete the image data
-				SOIL_free_image_data(imageData);
+				stbi_image_free(imageData);
 				// generate mipmaps
 				glGenerateMipmap(GL_TEXTURE_2D);
 				// set up texture parameter

@@ -78,10 +78,10 @@ namespace B00289996B00227422 {
 		const glm::mat3 rotationMatrix = glm::mat3_cast(obb.rotation); // create a rotation matrix from the obbs rotation
 		// use the rotation matrix to construct the obbs local up, right and forward vectors
 		const glm::vec3 lRight = rotationMatrix * glm::vec3(1.0f, 0.0f, 0.0f), lForward = rotationMatrix * glm::vec3(0.0f, 0.0f, 1.0f), lUp = rotationMatrix * glm::vec3(0.0f, 1.0f, 0.0f);
-		float width = obb.halfExtents.x * 2.0f, height = obb.halfExtents.y * 2.0f, length = obb.halfExtents.z * 2.0f; // get the width height and length of the obb
+		float width = obb.extents.x * 2.0f, height = obb.extents.y * 2.0f, length = obb.extents.z * 2.0f; // get the width height and length of the obb
 
 		// construct all 8 vertices of the obb and store them in an array
-		const glm::vec3 leftBottomBack = rotationMatrix * -obb.halfExtents + obb.centre - position, rightBottomBack = leftBottomBack + lRight * width, rightTopBack = rightBottomBack + lUp * height, leftTopBack = rightTopBack + lRight * -width,
+		const glm::vec3 leftBottomBack = rotationMatrix * -obb.extents + obb.centre - position, rightBottomBack = leftBottomBack + lRight * width, rightTopBack = rightBottomBack + lUp * height, leftTopBack = rightTopBack + lRight * -width,
 			leftBottomFront = leftBottomBack + lForward * length, rightBottomFront = leftBottomFront + lRight * width, rightTopFront = rightBottomFront + lUp * height, leftTopFront = rightTopFront + lRight * -width;
 		glm::vec3 corners[8] { leftBottomBack, rightBottomBack, rightTopBack, leftTopBack, leftBottomFront, rightBottomFront, rightTopFront, leftTopFront };
 

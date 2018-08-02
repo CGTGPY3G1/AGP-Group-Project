@@ -1,11 +1,10 @@
 #include "Transform.h"
 #include <algorithm>
-#include <glm\gtx\matrix_decompose.hpp>
-#include <glm\ext.hpp>
 #include "TypeConverter.h"
-#include <glm\gtc\type_ptr.hpp>
-#include <glm\gtx\string_cast.hpp>
-#include <glm\gtx\rotate_vector.hpp>
+#include <glm/ext.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include "Bounds.h"
 namespace B00289996B00227422 {
 	const glm::mat4 Transform::IDENTITY = glm::mat4(1.0f);
@@ -85,6 +84,7 @@ namespace B00289996B00227422 {
 	}
 
 	const glm::quat Transform::GetRotation() {
+		UpdateTransform();
 		return worldRotation;
 	}
 
@@ -153,13 +153,39 @@ namespace B00289996B00227422 {
 	}
 
 	const glm::vec3 Transform::TransformToWorldPoint(const glm::vec3 & point) {
+		return TransformToWorldPoint(point.x, point.y, point.z);
+	}
+
+	const glm::vec3 Transform::TransformToWorldPoint(const float & x, const float & y, const float & z) {
 		UpdateTransform();
-		return glm::vec3(worldTransform * glm::vec4(point, 0.0f));
+		return glm::vec3(worldTransform * glm::vec4(x, y, z, 1.0f));
 	}
 
 	const glm::vec3 Transform::TransformToLocalPoint(const glm::vec3 & point) {
+		return TransformToLocalPoint(point.x, point.y, point.z);
+	}
+
+	const glm::vec3 Transform::TransformToLocalPoint(const float & x, const float & y, const float & z) {
 		UpdateTransform();
-		return glm::vec3(world2Local * glm::vec4(point, 0.0f));
+		return glm::vec3(world2Local * glm::vec4(x, y, z, 1.0f));
+	}
+
+	const glm::vec3 Transform::TransformToWorldNormal(const glm::vec3 & normal) {
+		return TransformToWorldNormal(normal.x, normal.y, normal.z);
+	}
+
+	const glm::vec3 Transform::TransformToWorldNormal(const float & x, const float & y, const float & z) {
+		UpdateTransform();
+		return glm::vec3(worldTransform * glm::vec4(x, y, z, 0.0f));
+	}
+
+	const glm::vec3 Transform::TransformToLocalNormal(const glm::vec3 & normal) {
+		return TransformToLocalNormal(normal.x, normal.y, normal.z);
+	}
+
+	const glm::vec3 Transform::TransformToLocalNormal(const float & x, const float & y, const float & z) {
+		UpdateTransform();
+		return glm::vec3(world2Local * glm::vec4(x, y, z, 0.0f));
 	}
 
 	void Transform::SetParent(const std::weak_ptr<Transform> & newParent) {
@@ -187,14 +213,12 @@ namespace B00289996B00227422 {
 	}
 
 	glm::quat Transform::LookAt(const glm::vec3 & eye, const glm::vec3 & centre, const glm::vec3 & up) {
-		glm::quat toReturn;
-		glm::mat4 toDecompose = glm::lookAt(eye, centre, up);
-		glm::decompose(toDecompose, glm::vec3(), toReturn, glm::vec3(), glm::vec3(), glm::vec4());
-		return toReturn;
+		const glm::mat3 look = glm::mat3(glm::lookAt(eye, centre, up));
+		return glm::normalize(glm::quat_cast(look));
 	}
 
 	glm::quat Transform::SlerpQuaternion(const glm::quat & slerpFrom, const glm::quat & slerpTo, const float & alpha) {
-		return glm::slerp(slerpFrom, slerpTo, alpha);;
+		return glm::slerp(slerpFrom, slerpTo, alpha);
 	}
 
 	void Transform::LerpPosition(const glm::vec3 & lerpTo, const float & alpha) {
@@ -224,9 +248,9 @@ namespace B00289996B00227422 {
 
 	OBB Transform::TransformOBB(const OBB & obb) {
 		OBB toReturn;
-		toReturn.centre += GetPosition();
-		const glm::vec3 scale = GetScale();
-		toReturn.halfExtents = glm::vec3(obb.halfExtents.x * std::abs(scale.x), obb.halfExtents.y * std::abs(scale.y), obb.halfExtents.z * std::abs(scale.z));
+		toReturn.centre = TransformToWorldPoint(obb.centre);
+		glm::vec3 scale = GetScale();
+		toReturn.extents = glm::vec3(std::abs(obb.extents.x * scale.x), std::abs(obb.extents.y * scale.y), std::abs(obb.extents.z * scale.z));
 		toReturn.rotation = (obb.rotation * GetRotation());
 		return toReturn;
 	}
@@ -285,7 +309,7 @@ namespace B00289996B00227422 {
 	}
 
 	void Transform::getWorldTransform(btTransform & worldTrans) {
-		if (dirty) UpdateTransform();
+		UpdateTransform();
 		worldTrans.setOrigin(TypeConverter::ConvertToBulletVector3(worldPosition));
 		worldTrans.setRotation(TypeConverter::ConvertToBulletQuat(worldRotation));
 	}
@@ -293,9 +317,9 @@ namespace B00289996B00227422 {
 	void Transform::UpdateTransform() {
 		if(dirty) {
 			localRotation = glm::normalize(localRotation);
-			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), localPosition);
-			glm::mat4 rotationMatrix = glm::mat4_cast(localRotation);
-			glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), localScale);
+			const glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), localPosition);
+			const glm::mat4 rotationMatrix = glm::mat4_cast(localRotation);
+			const glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), localScale);
 			localTransform = translationMatrix * rotationMatrix * scaleMatrix;
 			if(parent.use_count() > 0) {
 				std::shared_ptr<Transform> p = parent.lock();
@@ -303,27 +327,23 @@ namespace B00289996B00227422 {
 					p->UpdateTransform();
 					worldTransform = p->worldTransform * localTransform;
 					worldRotation = glm::normalize(p->worldRotation * localRotation);
-					worldScale.x = p->worldScale.x * localScale.x;
-					worldScale.y = p->worldScale.y * localScale.y;
-					worldScale.z = p->worldScale.z * localScale.z;
-					
 				}
 				else {
 					worldTransform = localTransform;
-					worldRotation = glm::normalize(localRotation);
-					worldScale = localScale;
+					worldRotation = localRotation;
 				}
 			}
 			else {
 				worldTransform = localTransform;
-				worldRotation = glm::normalize(localRotation);
+				worldRotation = localRotation;
 				worldScale = localScale;
 			}		
 			normalmatrix = glm::mat3_cast(worldRotation);
 			world2Local = glm::inverse(worldTransform);
 			worldPosition = worldTransform[3];
-			forward = glm::normalize(normalmatrix * glm::vec3(0.0f, 0.0f, 1.0f)), up = glm::normalize(normalmatrix * glm::vec3(0.0f, 1.0f, 0.0f)), right = glm::normalize(normalmatrix * glm::vec3(1.0f, 0.0f, 0.0f));
+			worldScale = glm::vec3(glm::length(glm::vec3(worldTransform[0])), glm::length(glm::vec3(worldTransform[1])), glm::length(glm::vec3(worldTransform[2])));
 			dirty = false;
+			forward = TransformToLocalNormal(glm::vec3(0.0f, 0.0f, 1.0f)), up = TransformToLocalNormal(glm::vec3(0.0f, 1.0f, 0.0f)), right = TransformToLocalNormal(glm::vec3(1.0f, 0.0f, 0.0f));
 		}
 	}
 

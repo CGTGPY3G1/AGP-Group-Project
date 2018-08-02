@@ -11,13 +11,12 @@
 #include "Transform.h"
 #include "GameObject.h"
 namespace B00289996B00227422 {
-	GLuint ParticleEmitter::VAO = 0, ParticleEmitter::VBO = 0, ParticleEmitter::IBO = 0;
 	ParticleEmitter::ParticleEmitter() {
 	}
 
 	ParticleEmitter::ParticleEmitter(std::weak_ptr<GameObject> gameObject) : ScriptableComponent(gameObject){
 		shader = FileLoader::GetInstance().LoadShader("Shaders//Particles.vert", "Shaders//Particles.frag");
-		if(VAO == 0) Generate();
+		Generate();
 	}
 
 	ParticleEmitter::~ParticleEmitter() {
@@ -111,7 +110,7 @@ namespace B00289996B00227422 {
 	}
 
 	void ParticleEmitter::SetStartDelay(const float & delay) {
-		startDelay = delay;
+		startDelay = initialDelay = delay;
 	}
 
 	void ParticleEmitter::Update(const float & deltaTime) {
@@ -149,8 +148,8 @@ namespace B00289996B00227422 {
 	void ParticleEmitter::Render() {
 		std::shared_ptr<Camera> cam = Camera::GetMainCamera().lock();
 		glm::mat4 view = cam->GetView();
-
-		shader->SetUniform("viewviewprojection", cam->GetViewProjection());
+		shader->Bind();
+		shader->SetUniform("viewprojection", cam->GetViewProjection());
 		if(texture) texture->Bind(shader);
 		std::shared_ptr<Transform> camTransform = cam->GetComponent<Transform>().lock();
 		glm::mat4 transform = GetComponent<Transform>().lock()->GetWorldTransform();
@@ -166,6 +165,7 @@ namespace B00289996B00227422 {
 
 	void ParticleEmitter::Reset() {
 		accumulatedTime = 0.0f;
+		startDelay = initialDelay;
 		particles.clear();
 	}
 

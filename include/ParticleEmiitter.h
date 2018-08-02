@@ -206,7 +206,7 @@ namespace B00289996B00227422 {
 		/// <summary>Generates the VAO used by this emitter.</summary>
 		void Generate();
 		glm::vec3 linearVelocity = glm::vec3(0.0f, 0.0f, 0.0f), angularAxis, particleScale = glm::vec3(1.0);
-		float emissionRate = 0.0f, accumulatedTime = 0.0f, startDelay = 0.0f;
+		float emissionRate = 0.0f, accumulatedTime = 0.0f, startDelay = 0.0f, initialDelay = 0.0f;
 		bool started = false;
 		std::list<Particle> particles; // active particles
 		std::shared_ptr<ShaderProgram> shader; // current shader
@@ -214,7 +214,7 @@ namespace B00289996B00227422 {
 		float particleLifeLength = 1.0f, angularVelocity, startSize, endSize, emissionAngle = 0.0f, emissionRadius = 0.1f;
 		std::vector<ParticleVert> vertices; // vertex specifications
 		std::vector<unsigned int> indices;
-		static GLuint VAO, VBO, IBO; // vertex array, vertex buffer and index buffer
+		GLuint VAO = 0, VBO = 0, IBO = 0; // vertex array, vertex buffer and index buffer
 		glm::vec4 startColour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), endColour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		glm::vec3 startForce = glm::vec3(0.0f, 0.0f, 0.0f), endforce = glm::vec3(0.0f, 0.0f, 0.0f);
 	};

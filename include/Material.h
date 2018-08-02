@@ -51,7 +51,7 @@ namespace B00289996B00227422 {
 		/// <summary>Gets the texture specified by the provided index.</summary>
 		/// <param name="index">The array index of the texture.</param>
 		/// <returns>the texture specified by the provided index.</returns>
-		const std::shared_ptr<Texture> GetTexture(const unsigned int & index) const;
+		const std::shared_ptr<Texture> & GetTexture(const unsigned int & index) const;
 		/// <summary>Gets all textures attached to this material.</summary>
 		/// <returns>all textures attached to this material.</returns>
 		const std::vector<std::shared_ptr<Texture>> & GetTextures() const;

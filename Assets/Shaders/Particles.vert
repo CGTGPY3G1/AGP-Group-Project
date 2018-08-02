@@ -4,11 +4,11 @@ layout (location = 0) in vec3 position;
 layout (location = 4) in vec2 textureCoordinate;
 
 uniform mat4 model;
-uniform mat4 viewviewprojection;
+uniform mat4 viewprojection;
 
 out vec2 nTextureCoordinate;
 
 void main(void) {
 	nTextureCoordinate = textureCoordinate;
-    gl_Position = viewviewprojection * model * vec4(position, 1.0);
+    gl_Position = viewprojection * model * vec4(position, 1.0);
 }

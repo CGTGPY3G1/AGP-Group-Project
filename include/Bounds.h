@@ -13,7 +13,7 @@ namespace B00289996B00227422 {
 	struct OBB {
 		OBB(const glm::vec3 & position = glm::vec3(0.0f), const glm::vec3 & halfSize = glm::vec3(0.0f), const glm::quat & direction = glm::quat());
 		OBB(const AABB & aabb);
-		glm::vec3 centre, halfExtents;
+		glm::vec3 centre, extents;
 		glm::quat rotation;
 	};
 

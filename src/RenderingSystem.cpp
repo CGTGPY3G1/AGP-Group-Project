@@ -22,7 +22,7 @@
 #include "DebugDraw.h"
 #include <glm\gtc\matrix_inverse.hpp>
 namespace B00289996B00227422 {
-	RenderingSystem::RenderingSystem() : wave(false), bloom(false), swirl(false), shadow(false), swirlTimer(0.0f), waveTimer(0.0f), collisionType(0) {
+	RenderingSystem::RenderingSystem() : wave(false), bloom(false), swirl(false), shadow(true), normalMapping(true), swirlTimer(0.0f), waveTimer(0.0f), collisionType(0) {
 		// create depth buffers
 		depthBuffer = std::make_shared<DepthBuffer>();
 		

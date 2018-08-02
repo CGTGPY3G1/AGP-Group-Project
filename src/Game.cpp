@@ -13,6 +13,7 @@
 #include "Lights.h"
 #include "HUD.h"
 #include "PhysicsSystem.h"
+#include <glm/gtx/norm.hpp>
 namespace B00289996B00227422 {
 	Game::Game() : lastVelocity(glm::vec3(0.0f, 0.0f, 1.0f)){
 		// Load Main Shader + Rendering/Script Management Systems
@@ -73,7 +74,7 @@ namespace B00289996B00227422 {
 		fireParticles->SetLinearVelocity(glm::vec3(0.0f, 0.5f, 0.0f));
 		fireParticles->SetSize(7.0f, 0.01f);
 		fireParticles->SetEmissionAngle(-2.0f);
-		fireParticles->SetColour(glm::vec4(0.7f, 0.15f, 0.04f, 1.0f), glm::vec4(1.0f, 1.0f, 0.0f, 0.2f));
+		fireParticles->SetColour(glm::vec4(0.7f, 0.15f, 0.04f, 0.8f), glm::vec4(1.0f, 1.0f, 0.0f, 0.1f));
 		fireParticles->SetTexture(FileLoader::GetInstance().LoadTexture("Textures//Fire.png"));
 		//Smoke
 		std::shared_ptr<GameObject> particleEmitter2 = GameObjectManager::GetInstance().CreateGameObject("Smoke").lock();
@@ -88,7 +89,7 @@ namespace B00289996B00227422 {
 		smokeParticles->SetEmissionAngle(8.0f);
 		smokeParticles->SetRadius(0.09f);
 		smokeParticles->SetColour(glm::vec4(0.5f, 0.5f, 0.5f, 0.3f), glm::vec4(0.15f, 0.15f, 0.15f, 0.0f));
-		smokeParticles->SetStartDelay(0.5f);
+		smokeParticles->SetStartDelay(0.6f);
 		smokeParticles->SetTexture(FileLoader::GetInstance().LoadTexture("Textures//Particle.png"));
 		//Sparks
 		std::shared_ptr<GameObject> particleEmitter3 = GameObjectManager::GetInstance().CreateGameObject("Sparks").lock();
@@ -102,7 +103,7 @@ namespace B00289996B00227422 {
 		sparkParticles->SetSize(1.2f, 0.5f);
 		sparkParticles->SetEmissionAngle(20.0f);
 		sparkParticles->SetRadius(0.1f);
-		sparkParticles->SetColour(glm::vec4(0.8f, 0.32f, 0.0f, 0.5f), glm::vec4(1.0f, 1.0f, 0.0f, 0.1f));
+		sparkParticles->SetColour(glm::vec4(0.8f, 0.32f, 0.0f, 0.5f), glm::vec4(1.0f, 1.0f, 0.0f, 0.01f));
 		smokeParticles->SetTexture(FileLoader::GetInstance().LoadTexture("Textures//Particle.png"));
 
 		std::shared_ptr<GameObject> fireLight = GameObjectManager::GetInstance().CreateGameObject("FireLight").lock();
@@ -220,13 +221,12 @@ namespace B00289996B00227422 {
 		playerBody->AttachSphere(glm::vec3(0.0f), 0.1f, 9.0f);
 		playerBody->SetRestitition(0.5f);
 		ToggleDirectionalLight();
-		TogglePointLights();
+		//TogglePointLights();
 
-		std::shared_ptr<GameObject> wall = CreateWall(glm::vec3(0.0f, 0.0f, 5.0f));
-		wall = CreateWall(glm::vec3(0.0f, 0.0f, -5.0f));
-		wall = CreateWall(glm::vec3(-5.0f, 0.0f, 0.0f), 90.0f);
-		wall = CreateWall(glm::vec3(5.0f, 0.0f, 0.0f), 90.0f);
-		std::shared_ptr<MeshRenderer> wallRenderer = wall->AddComponent<MeshRenderer>().lock();
+		CreateWall(glm::vec3(0.0f, 0.0f, 5.0f));
+		CreateWall(glm::vec3(0.0f, 0.0f, -5.0f));
+		CreateWall(glm::vec3(-5.0f, 0.0f, 0.0f), 90.0f);
+		CreateWall(glm::vec3(5.0f, 0.0f, 0.0f), 90.0f);
 	}
 
 	Game::~Game() {
@@ -248,6 +248,14 @@ namespace B00289996B00227422 {
 		if(Input::GetKeyDown(SDL_SCANCODE_4)) {
 			std::shared_ptr<GameObject> campFire = GameObjectManager::GetInstance().GetGameObject("Campfire").lock();
 			campFire->SetEnabled(!campFire->GetEnabled());
+			std::shared_ptr<Transform> fireTransform = campFire->GetComponent<Transform>().lock()->GetChild(0).lock();
+			std::shared_ptr<ParticleEmitter> emitter = fireTransform->GetComponent<ParticleEmitter>().lock();
+			emitter->Reset();
+			for (size_t i = 0; i < fireTransform->NumberOfChildren(); i++) {
+				std::shared_ptr<Transform> childTransform = fireTransform->GetChild(i).lock();
+				std::shared_ptr<ParticleEmitter> childEmitter = childTransform->GetComponent<ParticleEmitter>().lock();
+				if(childEmitter)childEmitter->Reset();
+			}
 		}
 		// Toggle Post Processing Effects
 		if(Input::GetKeyDown(SDL_SCANCODE_5)) renderingSystem->SetBloom(!renderingSystem->GetBloom());
@@ -356,12 +364,13 @@ namespace B00289996B00227422 {
 		wallMaterial->AddTexture(FileLoader::GetInstance().LoadTexture("Textures//wall_diffuse.png", DIFFUSE));
 		wallMaterial->AddTexture(FileLoader::GetInstance().LoadTexture("Textures//wall_normal.png", NORMAL_MAP));
 		wallRenderer->SetMaterial(wallMaterial);
-		wall->GetComponent<Transform>().lock()->SetPosition(position);
-		wall->GetComponent<Transform>().lock()->Rotate(glm::vec3(0.0f, 1.0f, 0.0f), angle);
 		std::shared_ptr<RigidBody> wallRigidBody = wall->AddComponent<RigidBody>().lock();
 		wallRigidBody->Init(false);
 		wallRigidBody->AttachBox(glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(10.0f, 1.0, 0.1f), 0.0f);
 		wallRigidBody->SetRestitition(0.7f);
+		wall->GetComponent<Transform>().lock()->SetPosition(position);
+		wall->GetComponent<Transform>().lock()->Rotate(glm::vec3(0.0f, 1.0f, 0.0f), angle);
+		
 		return wall;
 	}
 

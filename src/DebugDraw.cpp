@@ -94,9 +94,9 @@ namespace B00289996B00227422 {
 	void DebugDraw::DrawOBB(const OBB & obb, const glm::vec3 & colour) {
 		const glm::mat3 rotationMatrix = glm::inverseTranspose(glm::mat3(glm::mat4_cast(obb.rotation)));
 		const glm::vec3 right = rotationMatrix * glm::vec3(1.0f, 0.0f, 0.0f), forward = rotationMatrix * glm::vec3(0.0f, 0.0f, 1.0f), up = rotationMatrix * glm::vec3(0.0f, 1.0f, 0.0f);
-		float width = obb.halfExtents.x * 2.0f, height = obb.halfExtents.y * 2.0f, length = obb.halfExtents.z * 2.0f;
+		float width = obb.extents.x * 2.0f, height = obb.extents.y * 2.0f, length = obb.extents.z * 2.0f;
 
-		const glm::vec3 lbb = rotationMatrix * -obb.halfExtents + obb.centre, rbb = lbb + right * width, rtb = rbb + up * height, ltb = rtb + right * -width,
+		const glm::vec3 lbb = rotationMatrix * -obb.extents + obb.centre, rbb = lbb + right * width, rtb = rbb + up * height, ltb = rtb + right * -width,
 			lbf = lbb + forward * length, rbf = lbf + right * width, rtf = rbf + up * height, ltf = rtf + right * -width;
 		DrawLine(lbb, rbb, colour);
 		DrawLine(rbb, rtb, colour);

@@ -4,8 +4,10 @@
 #include "Component.h"
 #include <memory>
 #include <vector>
-#include <glm\gtx\quaternion.hpp>
-#include <glm\gtc\matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/mat3x3.hpp>
+#include <glm/vec3.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <btBulletDynamicsCommon.h>
 namespace B00289996B00227422 {
 	struct OBB;
@@ -40,7 +42,13 @@ namespace B00289996B00227422 {
 		const glm::vec3 GetUp();
 		const glm::vec3 GetRight();
 		const glm::vec3 TransformToWorldPoint(const glm::vec3 & point);
+		const glm::vec3 TransformToWorldPoint(const float & x, const float & y, const float & z);
 		const glm::vec3 TransformToLocalPoint(const glm::vec3 & point);
+		const glm::vec3 TransformToLocalPoint(const float & x, const float & y, const float & z);
+		const glm::vec3 TransformToWorldNormal(const glm::vec3 & normal);
+		const glm::vec3 TransformToWorldNormal(const float & x, const float & y, const float & z);
+		const glm::vec3 TransformToLocalNormal(const glm::vec3 & normal);
+		const glm::vec3 TransformToLocalNormal(const float & x, const float & y, const float & z);
 		void SetParent(const std::weak_ptr<Transform> & newParent);
 		const std::weak_ptr<Transform> GetParent() const;
 		void SlerpRotation(const glm::quat & slerpTo, const float & alpha);
